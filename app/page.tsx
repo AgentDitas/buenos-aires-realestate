@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import Header from "@/components/Header";
 import { properties } from "@/data/properties";
 import PropertyCard from "@/components/PropertyCard";
 
@@ -17,58 +19,12 @@ const NEIGHBORHOODS = [
 
 export default function Home() {
   const [operation, setOperation] = useState<"buy" | "rent">("buy");
-  const [language, setLanguage] = useState<"EN" | "ES">("EN");
-  const [currency, setCurrency] = useState<"USD" | "ARS">("USD");
 
   const featured = properties.slice(0, 6);
 
   return (
     <div className="min-h-screen">
-      {/* Header */}
-      <header className="sticky top-0 z-20 border-b border-[var(--color-line)] bg-[var(--color-canvas)]/95 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <span className="font-display text-xl tracking-tight">Altura</span>
-
-          <nav className="hidden gap-8 text-sm font-medium text-[var(--color-ink-soft)] md:flex">
-            <span>Buy</span>
-            <span>Rent</span>
-            <span>Neighborhoods</span>
-          </nav>
-
-          <div className="flex items-center gap-2 text-xs font-medium">
-            <div className="flex overflow-hidden rounded-full border border-[var(--color-line)]">
-              {(["EN", "ES"] as const).map((lang) => (
-                <button
-                  key={lang}
-                  onClick={() => setLanguage(lang)}
-                  className={`px-3 py-1.5 transition-colors ${
-                    language === lang
-                      ? "bg-[var(--color-ink)] text-white"
-                      : "text-[var(--color-ink-soft)]"
-                  }`}
-                >
-                  {lang}
-                </button>
-              ))}
-            </div>
-            <div className="flex overflow-hidden rounded-full border border-[var(--color-line)]">
-              {(["USD", "ARS"] as const).map((cur) => (
-                <button
-                  key={cur}
-                  onClick={() => setCurrency(cur)}
-                  className={`px-3 py-1.5 transition-colors ${
-                    currency === cur
-                      ? "bg-[var(--color-ink)] text-white"
-                      : "text-[var(--color-ink-soft)]"
-                  }`}
-                >
-                  {cur}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-[var(--color-line)]">
@@ -146,13 +102,12 @@ export default function Home() {
               ))}
             </select>
 
-            <button
-              type="button"
-              title="The search results page is coming in the next step"
-              className="rounded-sm bg-[var(--color-ink)] px-5 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
+            <Link
+              href="/search"
+              className="rounded-sm bg-[var(--color-ink)] px-5 py-2 text-center text-sm font-medium text-white transition-opacity hover:opacity-90"
             >
               Search
-            </button>
+            </Link>
           </div>
         </div>
       </section>
@@ -175,7 +130,10 @@ export default function Home() {
       </section>
 
       {/* Neighborhoods */}
-      <section className="border-t border-[var(--color-line)] bg-[var(--color-canvas-alt)]">
+      <section
+        id="neighborhoods"
+        className="border-t border-[var(--color-line)] bg-[var(--color-canvas-alt)]"
+      >
         <div className="mx-auto max-w-6xl px-6 py-16">
           <h2 className="font-display mb-8 text-2xl text-[var(--color-ink)]">
             Explore by Neighborhood
@@ -186,7 +144,8 @@ export default function Home() {
                 (p) => p.neighborhood === n
               ).length;
               return (
-                <div
+                <Link
+                  href="/search"
                   key={n}
                   className="cursor-pointer rounded-sm border border-[var(--color-line)] bg-[var(--color-canvas)] p-5 transition-shadow hover:shadow-md"
                 >
@@ -196,7 +155,7 @@ export default function Home() {
                   <p className="mt-1 text-sm text-[var(--color-ink-soft)]">
                     {count} {count === 1 ? "listing" : "listings"}
                   </p>
-                </div>
+                </Link>
               );
             })}
           </div>
