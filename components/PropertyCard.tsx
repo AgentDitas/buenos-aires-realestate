@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Property } from "@/data/properties";
 
 function formatPrice(property: Property) {
@@ -44,13 +45,12 @@ export default function PropertyCard({ property }: { property: Property }) {
           <span className="font-display text-xl text-[var(--color-ink)]">
             {formatPrice(property)}
           </span>
-          <button
-            type="button"
-            title="Property detail pages are coming in the next step"
+          <Link
+            href={`/property/${property.id}`}
             className="rounded-sm border border-[var(--color-ink)] px-3 py-1.5 text-xs font-medium uppercase tracking-wide text-[var(--color-ink)] transition-colors hover:bg-[var(--color-ink)] hover:text-white"
           >
             View
-          </button>
+          </Link>
         </div>
       </div>
     </article>
