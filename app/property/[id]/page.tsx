@@ -3,17 +3,15 @@
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import PropertyCard from "@/components/PropertyCard";
 import { properties } from "@/data/properties";
-
-function formatPrice(priceUSD: number, operation: "buy" | "rent") {
-  const price = priceUSD.toLocaleString("en-US");
-  return operation === "rent" ? `$${price}/mo` : `$${price}`;
-}
+import { useAppSettings } from "@/contexts/AppSettingsContext";
 
 export default function PropertyDetailsPage() {
   const params = useParams();
   const id = params.id as string;
+  const { formatAmount } = useAppSettings();
 
   const property = properties.find((p) => p.id === id);
 
@@ -35,6 +33,7 @@ export default function PropertyDetailsPage() {
             Back to Search
           </Link>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -131,7 +130,7 @@ export default function PropertyDetailsPage() {
           <div>
             <div className="sticky top-24 rounded-sm border border-[var(--color-line)] bg-white p-6">
               <p className="font-display text-3xl text-[var(--color-ink)]">
-                {formatPrice(property.priceUSD, property.operation)}
+                {formatAmount(property.priceUSD, property.operation === "rent")}
               </p>
 
               <div className="mt-6 border-t border-[var(--color-line)] pt-6">
@@ -143,8 +142,7 @@ export default function PropertyDetailsPage() {
                 </p>
               </div>
 
-              
-                <a
+              <a
                 href={whatsappLink}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -176,6 +174,8 @@ export default function PropertyDetailsPage() {
           </div>
         )}
       </div>
+
+      <Footer />
     </div>
   );
 }

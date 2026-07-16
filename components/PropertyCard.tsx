@@ -1,12 +1,10 @@
 import Link from "next/link";
 import { Property } from "@/data/properties";
-
-function formatPrice(property: Property) {
-  const price = property.priceUSD.toLocaleString("en-US");
-  return property.operation === "rent" ? `$${price}/mo` : `$${price}`;
-}
+import { useAppSettings } from "@/contexts/AppSettingsContext";
 
 export default function PropertyCard({ property }: { property: Property }) {
+  const { formatAmount } = useAppSettings();
+
   return (
     <article className="group flex flex-col overflow-hidden rounded-sm border border-[var(--color-line)] bg-white/40 transition-shadow hover:shadow-lg">
       <div className="relative overflow-hidden bg-[var(--color-canvas-alt)]">
@@ -43,7 +41,7 @@ export default function PropertyCard({ property }: { property: Property }) {
 
         <div className="mt-auto flex items-center justify-between pt-3">
           <span className="font-display text-xl text-[var(--color-ink)]">
-            {formatPrice(property)}
+            {formatAmount(property.priceUSD, property.operation === "rent")}
           </span>
           <Link
             href={`/property/${property.id}`}
