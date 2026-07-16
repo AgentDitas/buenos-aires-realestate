@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { properties } from "@/data/properties";
 import PropertyCard from "@/components/PropertyCard";
 
@@ -26,7 +27,6 @@ export default function Home() {
     <div className="min-h-screen">
       <Header />
 
-      {/* Hero */}
       <section className="relative overflow-hidden border-b border-[var(--color-line)]">
         <svg
           className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.12]"
@@ -70,8 +70,14 @@ export default function Home() {
             international buyers alike.
           </p>
 
-          {/* Search bar */}
-          <div className="mt-8 flex max-w-2xl flex-col gap-3 rounded-sm border border-[var(--color-line)] bg-white p-3 shadow-sm sm:flex-row sm:items-center">
+          <Link
+            href="/search"
+            className="mt-6 inline-block rounded-sm bg-[var(--color-patina)] px-6 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90"
+          >
+            Browse Properties
+          </Link>
+
+          <div className="mt-6 flex max-w-2xl flex-col gap-3 rounded-sm border border-[var(--color-line)] bg-white p-3 shadow-sm sm:flex-row sm:items-center">
             <div className="flex overflow-hidden rounded-sm border border-[var(--color-line)]">
               {(["buy", "rent"] as const).map((op) => (
                 <button
@@ -112,9 +118,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured listings */}
-      <section className="mx-auto max-w-6xl px-6 py-16">
-        <div className="mb-8 flex items-end justify-between">
+      <section className="mx-auto max-w-6xl px-6 py-10">
+        <div className="mb-6 flex items-end justify-between">
           <h2 className="font-display text-2xl text-[var(--color-ink)]">
             Featured Listings
           </h2>
@@ -129,7 +134,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Neighborhoods */}
       <section
         id="neighborhoods"
         className="border-t border-[var(--color-line)] bg-[var(--color-canvas-alt)]"
@@ -162,12 +166,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-[var(--color-line)] px-6 py-8 text-center text-sm text-[var(--color-ink-soft)]">
-        <span className="font-display text-[var(--color-ink)]">Altura</span>{" "}
-        — Buenos Aires real estate, built for the world. Prototype in
-        progress.
-      </footer>
+      <Footer />
     </div>
   );
 }
