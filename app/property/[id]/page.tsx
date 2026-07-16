@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/Header";
@@ -12,6 +13,14 @@ export default function PropertyDetailsPage() {
   const params = useParams();
   const id = params.id as string;
   const { formatAmount } = useAppSettings();
+  const [loaded, setLoaded] = useState(false);
+  const [errored, setErrored] = useState(false);
+
+  function checkAlreadyLoaded(img: HTMLImageElement | null) {
+    if (img && img.complete && img.naturalWidth > 0) {
+      setLoaded(true);
+    }
+  }
 
   const property = properties.find((p) => p.id === id);
 
@@ -64,19 +73,48 @@ export default function PropertyDetailsPage() {
 
         <div className="mt-4 grid grid-cols-1 gap-10 lg:grid-cols-[1.4fr_1fr]">
           <div>
-            <div className="relative overflow-hidden rounded-sm bg-[var(--color-canvas-alt)]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={property.image}
-                alt={property.title}
-                style={{
-                  width: "100%",
-                  height: "420px",
-                  objectFit: "cover",
-                  objectPosition: "center",
-                  display: "block",
-                }}
-              />
+            <div
+              className="relative overflow-hidden rounded-sm bg-[var(--color-canvas-alt)]"
+              style={{ height: "420px" }}
+            >
+              {!loaded && !errored && (
+                <div className="absolute inset-0 animate-pulse bg-[var(--color-line)]" />
+              )}
+
+              {errored ? (
+                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[var(--color-patina)] to-[var(--color-patina-light)]">
+                  <svg
+                    viewBox="0 0 64 64"
+                    className="h-16 w-16 text-white/70"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                  >
+                    <path d="M8 30 L32 12 L56 30" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M14 28 V52 H50 V28" strokeLinecap="round" strokeLinejoin="round" />
+                    <rect x="27" y="36" width="10" height="16" />
+                  </svg>
+                </div>
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  ref={checkAlreadyLoaded}
+                  src={property.image}
+                  alt={property.title}
+                  onLoad={() => setLoaded(true)}
+                  onError={() => setErrored(true)}
+                  style={{
+                    width: "100%",
+                    height: "420px",
+                    objectFit: "cover",
+                    objectPosition: "center",
+                    display: "block",
+                    opacity: loaded ? 1 : 0,
+                    transition: "opacity 250ms ease-out",
+                  }}
+                />
+              )}
+
               <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-medium uppercase tracking-wide text-[var(--color-ink)]">
                 {property.operation === "buy" ? "For Sale" : "For Rent"}
               </span>

@@ -1,25 +1,71 @@
+"use client";
+
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { Property } from "@/data/properties";
 import { useAppSettings } from "@/contexts/AppSettingsContext";
 
 export default function PropertyCard({ property }: { property: Property }) {
   const { formatAmount } = useAppSettings();
+  const [loaded, setLoaded] = useState(false);
+  const [errored, setErrored] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  function checkAlreadyLoaded(img: HTMLImageElement | null) {
+    imgRef.current = img;
+    if (img && img.complete && img.naturalWidth > 0) {
+      setLoaded(true);
+    }
+  }
 
   return (
-    <article className="group flex flex-col overflow-hidden rounded-sm border border-[var(--color-line)] bg-white/40 transition-shadow hover:shadow-lg">
-      <div className="relative overflow-hidden bg-[var(--color-canvas-alt)]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={property.image}
-          alt={property.title}
-          style={{
-            width: "100%",
-            height: "175px",
-            objectFit: "cover",
-            objectPosition: "center",
-            display: "block",
-          }}
-        />
+    <Link
+      href={`/property/${property.id}`}
+      className="group flex flex-col overflow-hidden rounded-sm border border-[var(--color-line)] bg-white/40 transition-all duration-[250ms] ease-out hover:-translate-y-1 hover:shadow-xl"
+    >
+      <div
+        className="relative overflow-hidden bg-[var(--color-canvas-alt)]"
+        style={{ height: "175px" }}
+      >
+        {!loaded && !errored && (
+          <div className="absolute inset-0 animate-pulse bg-[var(--color-line)]" />
+        )}
+
+        {errored ? (
+          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[var(--color-patina)] to-[var(--color-patina-light)]">
+            <svg
+              viewBox="0 0 64 64"
+              className="h-10 w-10 text-white/70"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            >
+              <path d="M8 30 L32 12 L56 30" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M14 28 V52 H50 V28" strokeLinecap="round" strokeLinejoin="round" />
+              <rect x="27" y="36" width="10" height="16" />
+            </svg>
+          </div>
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            ref={checkAlreadyLoaded}
+            src={property.image}
+            alt={property.title}
+            onLoad={() => setLoaded(true)}
+            onError={() => setErrored(true)}
+            style={{
+              width: "100%",
+              height: "175px",
+              objectFit: "cover",
+              objectPosition: "center",
+              display: "block",
+              opacity: loaded ? 1 : 0,
+              transition: "opacity 250ms ease-out",
+            }}
+            className="transition-transform duration-[250ms] ease-out group-hover:scale-[1.03]"
+          />
+        )}
+
         <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium uppercase tracking-wide text-[var(--color-ink)]">
           {property.operation === "buy" ? "For Sale" : "For Rent"}
         </span>
@@ -43,14 +89,11 @@ export default function PropertyCard({ property }: { property: Property }) {
           <span className="font-display text-xl text-[var(--color-ink)]">
             {formatAmount(property.priceUSD, property.operation === "rent")}
           </span>
-          <Link
-            href={`/property/${property.id}`}
-            className="rounded-sm border border-[var(--color-ink)] px-3 py-1.5 text-xs font-medium uppercase tracking-wide text-[var(--color-ink)] transition-colors hover:bg-[var(--color-ink)] hover:text-white"
-          >
+          <span className="rounded-sm border border-[var(--color-line)] px-3 py-1.5 text-xs font-medium uppercase tracking-wide text-[var(--color-ink-soft)] transition-colors group-hover:border-[var(--color-ink)] group-hover:text-[var(--color-ink)]">
             View
-          </Link>
+          </span>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }
