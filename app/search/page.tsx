@@ -1,11 +1,12 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PropertyCard from "@/components/PropertyCard";
 import { properties, Property } from "@/data/properties";
+import { useAppSettings } from "@/contexts/AppSettingsContext";
 
 const NEIGHBORHOODS: Property["neighborhood"][] = [
   "Palermo",
@@ -18,7 +19,12 @@ const NEIGHBORHOODS: Property["neighborhood"][] = [
   "Núñez",
 ];
 
-const TYPES: Property["type"][] = ["Apartamento", "PH", "Casa", "Loft"];
+const TYPES: { value: Property["type"]; key: "apartamento" | "ph" | "casa" | "loft" }[] = [
+  { value: "Apartamento", key: "apartamento" },
+  { value: "PH", key: "ph" },
+  { value: "Casa", key: "casa" },
+  { value: "Loft", key: "loft" },
+];
 
 type SortOption = "price-asc" | "price-desc" | "beds-desc" | "area-desc";
 
@@ -26,6 +32,8 @@ function SearchPageContent() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { t } = useAppSettings();
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const operationParam = searchParams.get("operation");
   const operation: "all" | "buy" | "rent" =
@@ -109,165 +117,172 @@ function SearchPageContent() {
       }
     });
 
+  const filterControls = (
+    <>
+      <div>
+        <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[var(--color-brass)]">
+          {t("buyOrRent")}
+        </p>
+        <div className="flex overflow-hidden rounded-sm border border-[var(--color-line)]">
+          {(["all", "buy", "rent"] as const).map((op) => (
+            <button
+              key={op}
+              onClick={() => updateParams({ operation: op === "all" ? null : op })}
+              className={`flex-1 px-3 py-2 text-sm font-medium transition-colors ${
+                operation === op
+                  ? "bg-[var(--color-patina)] text-white"
+                  : "text-[var(--color-ink-soft)]"
+              }`}
+            >
+              {t(op)}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[var(--color-brass)]">
+          {t("price")}
+        </p>
+        <div className="flex items-center gap-2">
+          <input
+            type="number"
+            placeholder={t("min")}
+            value={minPrice}
+            onChange={(e) => updateParams({ minPrice: e.target.value || null })}
+            className="w-full rounded-sm border border-[var(--color-line)] bg-white px-2 py-1.5 text-sm outline-none focus:border-[var(--color-patina)]"
+          />
+          <span className="text-[var(--color-ink-soft)]">–</span>
+          <input
+            type="number"
+            placeholder={t("max")}
+            value={maxPrice}
+            onChange={(e) => updateParams({ maxPrice: e.target.value || null })}
+            className="w-full rounded-sm border border-[var(--color-line)] bg-white px-2 py-1.5 text-sm outline-none focus:border-[var(--color-patina)]"
+          />
+        </div>
+      </div>
+
+      <div>
+        <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[var(--color-brass)]">
+          {t("bedrooms")}
+        </p>
+        <select
+          value={minBeds}
+          onChange={(e) =>
+            updateParams({ bedrooms: e.target.value === "0" ? null : e.target.value })
+          }
+          className="w-full rounded-sm border border-[var(--color-line)] bg-white px-2 py-1.5 text-sm outline-none focus:border-[var(--color-patina)]"
+        >
+          <option value={0}>{t("any")}</option>
+          <option value={1}>1+</option>
+          <option value={2}>2+</option>
+          <option value={3}>3+</option>
+          <option value={4}>4+</option>
+        </select>
+      </div>
+
+      <div>
+        <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[var(--color-brass)]">
+          {t("bathrooms")}
+        </p>
+        <select
+          value={minBaths}
+          onChange={(e) =>
+            updateParams({ bathrooms: e.target.value === "0" ? null : e.target.value })
+          }
+          className="w-full rounded-sm border border-[var(--color-line)] bg-white px-2 py-1.5 text-sm outline-none focus:border-[var(--color-patina)]"
+        >
+          <option value={0}>{t("any")}</option>
+          <option value={1}>1+</option>
+          <option value={2}>2+</option>
+          <option value={3}>3+</option>
+        </select>
+      </div>
+
+      <div>
+        <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[var(--color-brass)]">
+          {t("propertyType")}
+        </p>
+        <div className="flex flex-col gap-1.5">
+          {TYPES.map(({ value, key }) => (
+            <label key={value} className="flex items-center gap-2 text-sm text-[var(--color-ink)]">
+              <input
+                type="checkbox"
+                checked={selectedTypes.includes(value)}
+                onChange={() => toggleType(value)}
+                className="accent-[var(--color-patina)]"
+              />
+              {t(key)}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[var(--color-brass)]">
+          {t("neighborhood")}
+        </p>
+        <div className="flex flex-col gap-1.5">
+          {NEIGHBORHOODS.map((n) => (
+            <label key={n} className="flex items-center gap-2 text-sm text-[var(--color-ink)]">
+              <input
+                type="checkbox"
+                checked={selectedNeighborhoods.includes(n)}
+                onChange={() => toggleNeighborhood(n)}
+                className="accent-[var(--color-patina)]"
+              />
+              {n}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <button
+        onClick={clearFilters}
+        className="rounded-sm border border-[var(--color-ink)] px-3 py-2 text-sm font-medium text-[var(--color-ink)] transition-colors hover:bg-[var(--color-ink)] hover:text-white"
+      >
+        {t("clearFilters")}
+      </button>
+    </>
+  );
+
   return (
     <div className="min-h-screen">
       <Header />
 
       <div className="mx-auto max-w-6xl px-6 py-8">
         <h1 className="font-display mb-6 text-2xl text-[var(--color-ink)]">
-          Search Listings
+          {t("searchListings")}
         </h1>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[240px_1fr_280px]">
-          <aside className="flex flex-col gap-6">
-            <div>
-              <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[var(--color-brass)]">
-                Buy or Rent
-              </p>
-              <div className="flex overflow-hidden rounded-sm border border-[var(--color-line)]">
-                {(["all", "buy", "rent"] as const).map((op) => (
-                  <button
-                    key={op}
-                    onClick={() => updateParams({ operation: op === "all" ? null : op })}
-                    className={`flex-1 px-3 py-2 text-sm font-medium capitalize transition-colors ${
-                      operation === op
-                        ? "bg-[var(--color-patina)] text-white"
-                        : "text-[var(--color-ink-soft)]"
-                    }`}
-                  >
-                    {op}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[var(--color-brass)]">
-                Price (USD)
-              </p>
-              <div className="flex items-center gap-2">
-                <input
-                  type="number"
-                  placeholder="Min"
-                  value={minPrice}
-                  onChange={(e) => updateParams({ minPrice: e.target.value || null })}
-                  className="w-full rounded-sm border border-[var(--color-line)] bg-white px-2 py-1.5 text-sm outline-none focus:border-[var(--color-patina)]"
-                />
-                <span className="text-[var(--color-ink-soft)]">–</span>
-                <input
-                  type="number"
-                  placeholder="Max"
-                  value={maxPrice}
-                  onChange={(e) => updateParams({ maxPrice: e.target.value || null })}
-                  className="w-full rounded-sm border border-[var(--color-line)] bg-white px-2 py-1.5 text-sm outline-none focus:border-[var(--color-patina)]"
-                />
-              </div>
-            </div>
-
-            <div>
-              <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[var(--color-brass)]">
-                Bedrooms
-              </p>
-              <select
-                value={minBeds}
-                onChange={(e) =>
-                  updateParams({ bedrooms: e.target.value === "0" ? null : e.target.value })
-                }
-                className="w-full rounded-sm border border-[var(--color-line)] bg-white px-2 py-1.5 text-sm outline-none focus:border-[var(--color-patina)]"
-              >
-                <option value={0}>Any</option>
-                <option value={1}>1+</option>
-                <option value={2}>2+</option>
-                <option value={3}>3+</option>
-                <option value={4}>4+</option>
-              </select>
-            </div>
-
-            <div>
-              <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[var(--color-brass)]">
-                Bathrooms
-              </p>
-              <select
-                value={minBaths}
-                onChange={(e) =>
-                  updateParams({ bathrooms: e.target.value === "0" ? null : e.target.value })
-                }
-                className="w-full rounded-sm border border-[var(--color-line)] bg-white px-2 py-1.5 text-sm outline-none focus:border-[var(--color-patina)]"
-              >
-                <option value={0}>Any</option>
-                <option value={1}>1+</option>
-                <option value={2}>2+</option>
-                <option value={3}>3+</option>
-              </select>
-            </div>
-
-            <div>
-              <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[var(--color-brass)]">
-                Property Type
-              </p>
-              <div className="flex flex-col gap-1.5">
-                {TYPES.map((t) => (
-                  <label
-                    key={t}
-                    className="flex items-center gap-2 text-sm text-[var(--color-ink)]"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={selectedTypes.includes(t)}
-                      onChange={() => toggleType(t)}
-                      className="accent-[var(--color-patina)]"
-                    />
-                    {t}
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[var(--color-brass)]">
-                Neighborhood
-              </p>
-              <div className="flex flex-col gap-1.5">
-                {NEIGHBORHOODS.map((n) => (
-                  <label
-                    key={n}
-                    className="flex items-center gap-2 text-sm text-[var(--color-ink)]"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={selectedNeighborhoods.includes(n)}
-                      onChange={() => toggleNeighborhood(n)}
-                      className="accent-[var(--color-patina)]"
-                    />
-                    {n}
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            <button
-              onClick={clearFilters}
-              className="rounded-sm border border-[var(--color-ink)] px-3 py-2 text-sm font-medium text-[var(--color-ink)] transition-colors hover:bg-[var(--color-ink)] hover:text-white"
-            >
-              Clear filters
-            </button>
-          </aside>
+          <aside className="hidden flex-col gap-6 lg:flex">{filterControls}</aside>
 
           <div>
-            <div className="mb-4 flex items-center justify-between">
+            <div className="mb-4 flex items-center justify-between gap-3">
               <p className="text-sm text-[var(--color-ink-soft)]">
-                {results.length} {results.length === 1 ? "property" : "properties"} found
+                {results.length} {results.length === 1 ? t("propertyFound") : t("propertiesFound")}
               </p>
-              <select
-                value={sortBy}
-                onChange={(e) => updateParams({ sort: e.target.value })}
-                className="rounded-sm border border-[var(--color-line)] bg-white px-2 py-1.5 text-sm outline-none focus:border-[var(--color-patina)]"
-              >
-                <option value="price-asc">Price: Low to High</option>
-                <option value="price-desc">Price: High to Low</option>
-                <option value="beds-desc">Most Bedrooms</option>
-                <option value="area-desc">Largest (m²)</option>
-              </select>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setMobileFiltersOpen(true)}
+                  className="rounded-sm border border-[var(--color-ink)] px-3 py-1.5 text-sm font-medium text-[var(--color-ink)] lg:hidden"
+                >
+                  {t("filtersLabel")}
+                </button>
+                <select
+                  value={sortBy}
+                  onChange={(e) => updateParams({ sort: e.target.value })}
+                  className="rounded-sm border border-[var(--color-line)] bg-white px-2 py-1.5 text-sm outline-none focus:border-[var(--color-patina)]"
+                >
+                  <option value="price-asc">{t("sortPriceLowHigh")}</option>
+                  <option value="price-desc">{t("sortPriceHighLow")}</option>
+                  <option value="beds-desc">{t("sortMostBedrooms")}</option>
+                  <option value="area-desc">{t("sortLargest")}</option>
+                </select>
+              </div>
             </div>
 
             {results.length > 0 ? (
@@ -278,7 +293,7 @@ function SearchPageContent() {
               </div>
             ) : (
               <p className="rounded-sm border border-[var(--color-line)] bg-[var(--color-canvas-alt)] p-8 text-center text-[var(--color-ink-soft)]">
-                No properties match these filters. Try widening your search.
+                {t("noPropertiesMatch")}
               </p>
             )}
           </div>
@@ -296,13 +311,42 @@ function SearchPageContent() {
                 <circle cx="12" cy="10" r="2.5" />
               </svg>
               <p className="text-sm font-medium text-[var(--color-ink-soft)]">
-                Interactive map
+                {t("interactiveMap")}
               </p>
-              <p className="max-w-[70%] text-xs text-[var(--color-ink-soft)]">Coming soon</p>
+              <p className="max-w-[70%] text-xs text-[var(--color-ink-soft)]">{t("comingSoon")}</p>
             </div>
           </div>
         </div>
       </div>
+
+      {mobileFiltersOpen && (
+        <div className="fixed inset-0 z-40 lg:hidden">
+          <div
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setMobileFiltersOpen(false)}
+          />
+          <div className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-lg bg-[var(--color-canvas)] p-6">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="font-display text-lg text-[var(--color-ink)]">{t("filtersLabel")}</h2>
+              <button
+                onClick={() => setMobileFiltersOpen(false)}
+                aria-label="Close filters"
+                className="text-2xl leading-none text-[var(--color-ink-soft)]"
+              >
+                ×
+              </button>
+            </div>
+            <div className="flex flex-col gap-6">{filterControls}</div>
+            <button
+              onClick={() => setMobileFiltersOpen(false)}
+              className="mt-6 w-full rounded-sm bg-[var(--color-ink)] px-5 py-3 text-sm font-medium text-white"
+            >
+              {t("showProperties")} {results.length}{" "}
+              {results.length === 1 ? t("propertyFound") : t("propertiesFound")}
+            </button>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>

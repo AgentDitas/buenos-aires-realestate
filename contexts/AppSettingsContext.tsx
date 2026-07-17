@@ -31,13 +31,45 @@ const TRANSLATIONS = {
   listing: { EN: "listing", ES: "propiedad" },
   listings: { EN: "listings", ES: "propiedades" },
 
-  // Property card
   forSale: { EN: "For Sale", ES: "En Venta" },
   forRent: { EN: "For Rent", ES: "En Alquiler" },
   bed: { EN: "bed", ES: "hab" },
   bath: { EN: "bath", ES: "baño" },
   view: { EN: "View", ES: "Ver" },
   comparing: { EN: "Comparing", ES: "Comparando" },
+
+  // Search page
+  searchListings: { EN: "Search Listings", ES: "Buscar Propiedades" },
+  buyOrRent: { EN: "Buy or Rent", ES: "Comprar o Alquilar" },
+  all: { EN: "All", ES: "Todos" },
+  price: { EN: "Price (USD)", ES: "Precio (USD)" },
+  min: { EN: "Min", ES: "Mín" },
+  max: { EN: "Max", ES: "Máx" },
+  bedrooms: { EN: "Bedrooms", ES: "Dormitorios" },
+  bathrooms: { EN: "Bathrooms", ES: "Baños" },
+  any: { EN: "Any", ES: "Cualquiera" },
+  propertyType: { EN: "Property Type", ES: "Tipo de Propiedad" },
+  neighborhood: { EN: "Neighborhood", ES: "Barrio" },
+  clearFilters: { EN: "Clear filters", ES: "Limpiar filtros" },
+  propertyFound: { EN: "property found", ES: "propiedad encontrada" },
+  propertiesFound: { EN: "properties found", ES: "propiedades encontradas" },
+  sortPriceLowHigh: { EN: "Price: Low to High", ES: "Precio: Menor a Mayor" },
+  sortPriceHighLow: { EN: "Price: High to Low", ES: "Precio: Mayor a Menor" },
+  sortMostBedrooms: { EN: "Most Bedrooms", ES: "Más Dormitorios" },
+  sortLargest: { EN: "Largest (m²)", ES: "Más Grande (m²)" },
+  noPropertiesMatch: {
+    EN: "No properties match these filters. Try widening your search.",
+    ES: "Ninguna propiedad coincide con estos filtros. Probá ampliar tu búsqueda.",
+  },
+  interactiveMap: { EN: "Interactive map", ES: "Mapa interactivo" },
+  comingSoon: { EN: "Coming soon", ES: "Próximamente" },
+  filtersLabel: { EN: "Filters", ES: "Filtros" },
+  showProperties: { EN: "Show", ES: "Mostrar" },
+
+  apartamento: { EN: "Apartment", ES: "Apartamento" },
+  ph: { EN: "PH", ES: "PH" },
+  casa: { EN: "House", ES: "Casa" },
+  loft: { EN: "Loft", ES: "Loft" },
 } as const;
 
 type TranslationKey = keyof typeof TRANSLATIONS;
