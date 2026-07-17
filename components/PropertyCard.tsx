@@ -5,10 +5,12 @@ import Link from "next/link";
 import { Property } from "@/data/properties";
 import { useAppSettings } from "@/contexts/AppSettingsContext";
 import { useFavorites } from "@/hooks/useFavorites";
+import { useCompare } from "@/hooks/useCompare";
 
 export default function PropertyCard({ property }: { property: Property }) {
   const { formatAmount } = useAppSettings();
   const { isFavorite, toggleFavorite } = useFavorites();
+  const { isComparing, toggleCompare, isFull } = useCompare();
   const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -21,6 +23,8 @@ export default function PropertyCard({ property }: { property: Property }) {
   }
 
   const favorited = isFavorite(property.id);
+  const comparing = isComparing(property.id);
+  const compareDisabled = !comparing && isFull;
 
   return (
     <Link
@@ -93,6 +97,25 @@ export default function PropertyCard({ property }: { property: Property }) {
           >
             <path d="M12 20.5S3 14.6 3 8.9C3 5.9 5.4 3.5 8.3 3.5c1.7 0 3.2.8 4.2 2.1a5.2 5.2 0 0 1 8.5 4c0 5.7-9 11.9-9 11.9Z" />
           </svg>
+        </button>
+
+        <button
+          type="button"
+          disabled={compareDisabled}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleCompare(property.id);
+          }}
+          className={`absolute bottom-3 left-3 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+            comparing
+              ? "bg-[var(--color-patina)] text-white"
+              : compareDisabled
+              ? "cursor-not-allowed bg-white/70 text-[var(--color-ink-soft)]"
+              : "bg-white/90 text-[var(--color-ink)] hover:bg-white"
+          }`}
+        >
+          {comparing ? "✓ Comparing" : "+ Compare"}
         </button>
       </div>
 

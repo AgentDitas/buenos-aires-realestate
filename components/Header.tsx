@@ -4,10 +4,12 @@ import { useState } from "react";
 import Link from "next/link";
 import { useAppSettings } from "@/contexts/AppSettingsContext";
 import { useFavorites } from "@/hooks/useFavorites";
+import { useCompare } from "@/hooks/useCompare";
 
 export default function Header() {
   const { language, setLanguage, currency, setCurrency } = useAppSettings();
   const { favorites } = useFavorites();
+  const { compareIds } = useCompare();
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -35,6 +37,17 @@ export default function Header() {
             {favorites.length > 0 && (
               <span className="rounded-full bg-[var(--color-patina)] px-1.5 py-0.5 text-[10px] font-semibold text-white">
                 {favorites.length}
+              </span>
+            )}
+          </Link>
+          <Link
+            href="/compare"
+            className="flex items-center gap-1.5 hover:text-[var(--color-ink)]"
+          >
+            Compare
+            {compareIds.length > 0 && (
+              <span className="rounded-full bg-[var(--color-brass)] px-1.5 py-0.5 text-[10px] font-semibold text-white">
+                {compareIds.length}
               </span>
             )}
           </Link>
@@ -118,6 +131,18 @@ export default function Header() {
               {favorites.length > 0 && (
                 <span className="rounded-full bg-[var(--color-patina)] px-1.5 py-0.5 text-[10px] font-semibold text-white">
                   {favorites.length}
+                </span>
+              )}
+            </Link>
+            <Link
+              href="/compare"
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center gap-2"
+            >
+              Compare
+              {compareIds.length > 0 && (
+                <span className="rounded-full bg-[var(--color-brass)] px-1.5 py-0.5 text-[10px] font-semibold text-white">
+                  {compareIds.length}
                 </span>
               )}
             </Link>
