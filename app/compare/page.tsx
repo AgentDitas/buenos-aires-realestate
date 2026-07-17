@@ -8,9 +8,11 @@ import { NEIGHBORHOOD_INFO } from "@/data/neighborhoodInfo";
 import { estimatePurchaseCosts, formatRange, formatUSD } from "@/lib/purchaseEstimate";
 import { estimateInvestmentScore } from "@/lib/comparisonMetrics";
 import { useCompare } from "@/hooks/useCompare";
+import { useAppSettings } from "@/contexts/AppSettingsContext";
 
 export default function ComparePage() {
   const { compareIds, removeFromCompare, clearCompare, loaded } = useCompare();
+  const { t, language } = useAppSettings();
   const items = properties.filter((p) => compareIds.includes(p.id));
 
   if (!loaded) {
@@ -30,33 +32,28 @@ export default function ComparePage() {
         <div className="mb-6 flex items-center justify-between">
           <div>
             <h1 className="font-display text-2xl text-[var(--color-ink)]">
-              Compare Properties
+              {t("compareProperties")}
             </h1>
-            <p className="mt-1 text-sm text-[var(--color-ink-soft)]">
-              Up to 3 properties, side by side.
-            </p>
+            <p className="mt-1 text-sm text-[var(--color-ink-soft)]">{t("upToThree")}</p>
           </div>
           {items.length > 0 && (
             <button
               onClick={clearCompare}
               className="rounded-sm border border-[var(--color-ink)] px-3 py-2 text-sm font-medium text-[var(--color-ink)] hover:bg-[var(--color-ink)] hover:text-white"
             >
-              Clear all
+              {t("clearAll")}
             </button>
           )}
         </div>
 
         {items.length === 0 ? (
           <div className="rounded-sm border border-[var(--color-line)] bg-[var(--color-canvas-alt)] p-12 text-center">
-            <p className="text-[var(--color-ink-soft)]">
-              No properties selected yet. Tap &quot;+ Compare&quot; on any
-              listing to add it here.
-            </p>
+            <p className="text-[var(--color-ink-soft)]">{t("noPropertiesSelected")}</p>
             <Link
               href="/search"
               className="mt-4 inline-block rounded-sm bg-[var(--color-ink)] px-5 py-2.5 text-sm font-medium text-white"
             >
-              Browse Listings
+              {t("browseListings")}
             </Link>
           </div>
         ) : (
@@ -77,7 +74,7 @@ export default function ComparePage() {
                         href={`/property/${p.id}`}
                         className="font-display text-base text-[var(--color-ink)] hover:underline"
                       >
-                        {p.title}
+                        {language === "ES" ? p.titleEs : p.title}
                       </Link>
                       <p className="mt-1 text-xs text-[var(--color-ink-soft)]">
                         {p.neighborhood} · {p.type}
@@ -86,7 +83,7 @@ export default function ComparePage() {
                         onClick={() => removeFromCompare(p.id)}
                         className="mt-2 text-xs text-[var(--color-brass)] hover:underline"
                       >
-                        Remove
+                        {t("remove")}
                       </button>
                     </th>
                   ))}
@@ -95,22 +92,22 @@ export default function ComparePage() {
               <tbody>
                 {[
                   {
-                    label: "Price",
+                    label: t("price"),
                     render: (p: (typeof items)[number]) =>
                       p.operation === "rent"
                         ? `${formatUSD(p.priceUSD)}/mo`
                         : formatUSD(p.priceUSD),
                   },
                   {
-                    label: "Beds / Baths",
-                    render: (p: (typeof items)[number]) => `${p.bedrooms} bed · ${p.bathrooms} bath`,
+                    label: `${t("bed")} / ${t("bath")}`,
+                    render: (p: (typeof items)[number]) => `${p.bedrooms} ${t("bed")} · ${p.bathrooms} ${t("bath")}`,
                   },
                   {
-                    label: "Size",
+                    label: t("size"),
                     render: (p: (typeof items)[number]) => `${p.areaM2} m²`,
                   },
                   {
-                    label: "Est. Cash Needed",
+                    label: t("estCashNeeded"),
                     render: (p: (typeof items)[number]) => {
                       if (p.operation !== "buy") return "—";
                       const c = estimatePurchaseCosts(p.priceUSD, p.areaM2);
@@ -118,7 +115,7 @@ export default function ComparePage() {
                     },
                   },
                   {
-                    label: "Est. Closing Costs",
+                    label: t("estClosingCosts"),
                     render: (p: (typeof items)[number]) => {
                       if (p.operation !== "buy") return "—";
                       const c = estimatePurchaseCosts(p.priceUSD, p.areaM2);
@@ -126,35 +123,35 @@ export default function ComparePage() {
                     },
                   },
                   {
-                    label: "Monthly HOA",
+                    label: t("monthlyHoaShort"),
                     render: (p: (typeof items)[number]) => {
                       const c = estimatePurchaseCosts(p.priceUSD, p.areaM2);
                       return `${formatUSD(c.monthlyHOA)}/mo`;
                     },
                   },
                   {
-                    label: "Walkability",
+                    label: t("walkability"),
                     render: (p: (typeof items)[number]) =>
                       "★".repeat(NEIGHBORHOOD_INFO[p.neighborhood]?.walkability ?? 0) || "—",
                   },
                   {
-                    label: "Nightlife",
+                    label: t("nightlife"),
                     render: (p: (typeof items)[number]) =>
                       "★".repeat(NEIGHBORHOOD_INFO[p.neighborhood]?.nightlife ?? 0) || "—",
                   },
                   {
-                    label: "Investment Score",
+                    label: t("investmentScore"),
                     render: (p: (typeof items)[number]) => `${estimateInvestmentScore(p)}/10`,
                   },
                   {
-                    label: "Foreign Buyer Friendly",
+                    label: t("foreignBuyerFriendly"),
                     render: (p: (typeof items)[number]) =>
-                      p.operation === "buy" ? "Yes" : "N/A",
+                      p.operation === "buy" ? t("yes") : "N/A",
                   },
                   {
-                    label: "Remote Closing",
+                    label: t("remoteClosing"),
                     render: (p: (typeof items)[number]) =>
-                      p.operation === "buy" ? "Available" : "N/A",
+                      p.operation === "buy" ? t("available") : "N/A",
                   },
                 ].map((row) => (
                   <tr key={row.label}>
@@ -174,7 +171,7 @@ export default function ComparePage() {
               </tbody>
             </table>
             <p className="mt-3 text-xs text-[var(--color-ink-soft)]">
-              Estimates for illustration only — actual costs and scores vary.
+              {t("compareEstimatesNote")}
             </p>
           </div>
         )}

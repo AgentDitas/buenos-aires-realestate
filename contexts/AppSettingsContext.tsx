@@ -70,7 +70,6 @@ const TRANSLATIONS = {
   casa: { EN: "House", ES: "Casa" },
   loft: { EN: "Loft", ES: "Loft" },
 
-  // Property details page
   backToSearch: { EN: "Back to Search", ES: "Volver a la Búsqueda" },
   description: { EN: "Description", ES: "Descripción" },
   amenities: { EN: "Amenities", ES: "Amenities" },
@@ -89,7 +88,6 @@ const TRANSLATIONS = {
     ES: "Esta propiedad puede haber sido eliminada o el enlace es incorrecto.",
   },
 
-  // Foreign Buyer's Hub
   buyingAsForeigner: { EN: "🌎 Buying as a Foreigner", ES: "🌎 Comprando como Extranjero" },
   canForeignersBuy: { EN: "Can Foreigners Buy?", ES: "¿Pueden Comprar los Extranjeros?" },
   yesAnswer: { EN: "✅ Yes", ES: "✅ Sí" },
@@ -150,6 +148,54 @@ const TRANSLATIONS = {
     ES: "Reservá una consulta gratuita — te conectamos con un agente inmobiliario, abogado, contador y administrador de propiedades.",
   },
   bookFreeConsultation: { EN: "Book a Free Consultation", ES: "Reservar Consulta Gratuita" },
+
+  // Footer
+  explore: { EN: "Explore", ES: "Explorar" },
+  contact: { EN: "Contact", ES: "Contacto" },
+  legal: { EN: "Legal", ES: "Legal" },
+  privacyPolicy: { EN: "Privacy Policy", ES: "Política de Privacidad" },
+  terms: { EN: "Terms", ES: "Términos" },
+  footerTagline: {
+    EN: "Buenos Aires real estate for local and international buyers.",
+    ES: "Bienes raíces en Buenos Aires para compradores locales e internacionales.",
+  },
+  savedOnThisDevice: { EN: "Saved on this device only.", ES: "Guardado solo en este dispositivo." },
+  noFavoritesYet: {
+    EN: "You haven't saved any properties yet.",
+    ES: "Todavía no guardaste ninguna propiedad.",
+  },
+  browseListings: { EN: "Browse Listings", ES: "Ver Propiedades" },
+
+  // Compare page
+  compareProperties: { EN: "Compare Properties", ES: "Comparar Propiedades" },
+  upToThree: { EN: "Up to 3 properties, side by side.", ES: "Hasta 3 propiedades, lado a lado." },
+  clearAll: { EN: "Clear all", ES: "Limpiar todo" },
+  noPropertiesSelected: {
+    EN: 'No properties selected yet. Tap "+ Compare" on any listing to add it here.',
+    ES: 'Todavía no seleccionaste propiedades. Tocá "+ Comparar" en cualquier propiedad para agregarla acá.',
+  },
+  remove: { EN: "Remove", ES: "Quitar" },
+  size: { EN: "Size", ES: "Tamaño" },
+  estCashNeeded: { EN: "Est. Cash Needed", ES: "Efectivo Estimado" },
+  estClosingCosts: { EN: "Est. Closing Costs", ES: "Costos de Cierre Estimados" },
+  monthlyHoaShort: { EN: "Monthly HOA", ES: "Expensas Mensuales" },
+  investmentScore: { EN: "Investment Score", ES: "Puntaje de Inversión" },
+  foreignBuyerFriendly: { EN: "Foreign Buyer Friendly", ES: "Apto Comprador Extranjero" },
+  remoteClosing: { EN: "Remote Closing", ES: "Cierre Remoto" },
+  yes: { EN: "Yes", ES: "Sí" },
+  available: { EN: "Available", ES: "Disponible" },
+  compareEstimatesNote: {
+    EN: "Estimates for illustration only — actual costs and scores vary.",
+    ES: "Estimaciones solo a modo ilustrativo — los costos y puntajes reales varían.",
+  },
+
+  // 404
+  pageNotFound: { EN: "Page not found", ES: "Página no encontrada" },
+  pageNotFoundDetail: {
+    EN: "The page you're looking for doesn't exist or may have moved.",
+    ES: "La página que buscás no existe o puede haber cambiado de lugar.",
+  },
+  backToHome: { EN: "Back to Home", ES: "Volver al Inicio" },
 } as const;
 
 type TranslationKey = keyof typeof TRANSLATIONS;

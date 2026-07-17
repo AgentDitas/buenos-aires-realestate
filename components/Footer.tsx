@@ -1,6 +1,11 @@
+"use client";
+
 import Link from "next/link";
+import { useAppSettings } from "@/contexts/AppSettingsContext";
 
 export default function Footer() {
+  const { t } = useAppSettings();
+
   return (
     <footer className="border-t border-[var(--color-line)] bg-[var(--color-canvas-alt)]">
       <div className="mx-auto max-w-6xl px-6 py-12">
@@ -10,28 +15,28 @@ export default function Footer() {
               Altura
             </span>
             <p className="mt-3 text-sm text-[var(--color-ink-soft)]">
-              Buenos Aires real estate for local and international buyers.
+              {t("footerTagline")}
             </p>
           </div>
 
           <div>
             <p className="text-xs font-medium uppercase tracking-wide text-[var(--color-brass)]">
-              Explore
+              {t("explore")}
             </p>
             <ul className="mt-3 flex flex-col gap-2 text-sm text-[var(--color-ink-soft)]">
               <li>
                 <Link href="/search?operation=buy" className="hover:text-[var(--color-ink)]">
-                  Buy
+                  {t("buy")}
                 </Link>
               </li>
               <li>
                 <Link href="/search?operation=rent" className="hover:text-[var(--color-ink)]">
-                  Rent
+                  {t("rent")}
                 </Link>
               </li>
               <li>
                 <Link href="/#neighborhoods" className="hover:text-[var(--color-ink)]">
-                  Neighborhoods
+                  {t("neighborhoods")}
                 </Link>
               </li>
             </ul>
@@ -39,7 +44,7 @@ export default function Footer() {
 
           <div>
             <p className="text-xs font-medium uppercase tracking-wide text-[var(--color-brass)]">
-              Contact
+              {t("contact")}
             </p>
             <ul className="mt-3 flex flex-col gap-2 text-sm text-[var(--color-ink-soft)]">
               <li>
@@ -57,17 +62,17 @@ export default function Footer() {
 
           <div>
             <p className="text-xs font-medium uppercase tracking-wide text-[var(--color-brass)]">
-              Legal
+              {t("legal")}
             </p>
             <ul className="mt-3 flex flex-col gap-2 text-sm text-[var(--color-ink-soft)]">
               <li>
                 <Link href="/privacy" className="hover:text-[var(--color-ink)]">
-                  Privacy Policy
+                  {t("privacyPolicy")}
                 </Link>
               </li>
               <li>
                 <Link href="/terms" className="hover:text-[var(--color-ink)]">
-                  Terms
+                  {t("terms")}
                 </Link>
               </li>
             </ul>
@@ -75,7 +80,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 border-t border-[var(--color-line)] pt-6 text-center text-xs text-[var(--color-ink-soft)]">
-          Altura — Buenos Aires real estate for local and international buyers.
+          Altura — {t("footerTagline")}
         </div>
       </div>
     </footer>
