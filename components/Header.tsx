@@ -7,7 +7,7 @@ import { useFavorites } from "@/hooks/useFavorites";
 import { useCompare } from "@/hooks/useCompare";
 
 export default function Header() {
-  const { language, setLanguage, currency, setCurrency } = useAppSettings();
+  const { language, setLanguage, currency, setCurrency, t } = useAppSettings();
   const { favorites } = useFavorites();
   const { compareIds } = useCompare();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -21,19 +21,19 @@ export default function Header() {
 
         <nav className="hidden items-center gap-8 text-sm font-medium text-[var(--color-ink-soft)] md:flex">
           <Link href="/search?operation=buy" className="hover:text-[var(--color-ink)]">
-            Buy
+            {t("buy")}
           </Link>
           <Link href="/search?operation=rent" className="hover:text-[var(--color-ink)]">
-            Rent
+            {t("rent")}
           </Link>
           <Link href="/#neighborhoods" className="hover:text-[var(--color-ink)]">
-            Neighborhoods
+            {t("neighborhoods")}
           </Link>
           <Link
             href="/favorites"
             className="flex items-center gap-1.5 hover:text-[var(--color-ink)]"
           >
-            Favorites
+            {t("favorites")}
             {favorites.length > 0 && (
               <span className="rounded-full bg-[var(--color-patina)] px-1.5 py-0.5 text-[10px] font-semibold text-white">
                 {favorites.length}
@@ -44,7 +44,7 @@ export default function Header() {
             href="/compare"
             className="flex items-center gap-1.5 hover:text-[var(--color-ink)]"
           >
-            Compare
+            {t("compare")}
             {compareIds.length > 0 && (
               <span className="rounded-full bg-[var(--color-brass)] px-1.5 py-0.5 text-[10px] font-semibold text-white">
                 {compareIds.length}
@@ -114,20 +114,20 @@ export default function Header() {
         <div className="border-t border-[var(--color-line)] bg-[var(--color-canvas)] px-6 py-4 md:hidden">
           <nav className="flex flex-col gap-4 text-sm font-medium text-[var(--color-ink)]">
             <Link href="/search?operation=buy" onClick={() => setMenuOpen(false)}>
-              Buy
+              {t("buy")}
             </Link>
             <Link href="/search?operation=rent" onClick={() => setMenuOpen(false)}>
-              Rent
+              {t("rent")}
             </Link>
             <Link href="/#neighborhoods" onClick={() => setMenuOpen(false)}>
-              Neighborhoods
+              {t("neighborhoods")}
             </Link>
             <Link
               href="/favorites"
               onClick={() => setMenuOpen(false)}
               className="flex items-center gap-2"
             >
-              Favorites
+              {t("favorites")}
               {favorites.length > 0 && (
                 <span className="rounded-full bg-[var(--color-patina)] px-1.5 py-0.5 text-[10px] font-semibold text-white">
                   {favorites.length}
@@ -139,7 +139,7 @@ export default function Header() {
               onClick={() => setMenuOpen(false)}
               className="flex items-center gap-2"
             >
-              Compare
+              {t("compare")}
               {compareIds.length > 0 && (
                 <span className="rounded-full bg-[var(--color-brass)] px-1.5 py-0.5 text-[10px] font-semibold text-white">
                   {compareIds.length}

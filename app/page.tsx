@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { properties } from "@/data/properties";
 import PropertyCard from "@/components/PropertyCard";
+import { useAppSettings } from "@/contexts/AppSettingsContext";
 
 const NEIGHBORHOODS = [
   "Palermo",
@@ -20,6 +21,7 @@ const NEIGHBORHOODS = [
 
 export default function Home() {
   const [operation, setOperation] = useState<"buy" | "rent">("buy");
+  const { t } = useAppSettings();
 
   const featured = properties.slice(0, 6);
 
@@ -62,19 +64,17 @@ export default function Home() {
 
         <div className="relative mx-auto max-w-6xl px-6 py-20 md:py-28">
           <h1 className="font-display max-w-xl text-4xl leading-tight text-[var(--color-ink)] md:text-5xl">
-            Buenos Aires real estate, made clear for buyers anywhere.
+            {t("heroHeadline")}
           </h1>
           <p className="mt-4 max-w-md text-[var(--color-ink-soft)]">
-            Browse apartments, PHs, and houses across the city&apos;s
-            best neighborhoods — priced in USD, built for local and
-            international buyers alike.
+            {t("heroSubtext")}
           </p>
 
           <Link
             href="/search"
             className="mt-6 inline-block rounded-sm bg-[var(--color-patina)] px-6 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90"
           >
-            Browse Properties
+            {t("browseProperties")}
           </Link>
 
           <div className="mt-6 flex max-w-2xl flex-col gap-3 rounded-sm border border-[var(--color-line)] bg-white p-3 shadow-sm sm:flex-row sm:items-center">
@@ -89,7 +89,7 @@ export default function Home() {
                       : "text-[var(--color-ink-soft)]"
                   }`}
                 >
-                  {op}
+                  {t(op)}
                 </button>
               ))}
             </div>
@@ -99,7 +99,7 @@ export default function Home() {
               defaultValue=""
             >
               <option value="" disabled>
-                Select a neighborhood
+                {t("selectNeighborhood")}
               </option>
               {NEIGHBORHOODS.map((n) => (
                 <option key={n} value={n}>
@@ -109,10 +109,10 @@ export default function Home() {
             </select>
 
             <Link
-              href="/search"
+              href={`/search?operation=${operation}`}
               className="rounded-sm bg-[var(--color-ink)] px-5 py-2 text-center text-sm font-medium text-white transition-opacity hover:opacity-90"
             >
-              Search
+              {t("search")}
             </Link>
           </div>
         </div>
@@ -121,10 +121,10 @@ export default function Home() {
       <section className="mx-auto max-w-6xl px-6 py-10">
         <div className="mb-6 flex items-end justify-between">
           <h2 className="font-display text-2xl text-[var(--color-ink)]">
-            Featured Listings
+            {t("featuredListings")}
           </h2>
           <span className="text-sm text-[var(--color-ink-soft)]">
-            {properties.length} properties total
+            {properties.length} {t("propertiesTotal")}
           </span>
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -140,7 +140,7 @@ export default function Home() {
       >
         <div className="mx-auto max-w-6xl px-6 py-16">
           <h2 className="font-display mb-8 text-2xl text-[var(--color-ink)]">
-            Explore by Neighborhood
+            {t("exploreByNeighborhood")}
           </h2>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
             {NEIGHBORHOODS.map((n) => {
@@ -149,7 +149,7 @@ export default function Home() {
               ).length;
               return (
                 <Link
-                  href="/search"
+                  href={`/search?neighborhood=${encodeURIComponent(n)}`}
                   key={n}
                   className="cursor-pointer rounded-sm border border-[var(--color-line)] bg-[var(--color-canvas)] p-5 transition-shadow hover:shadow-md"
                 >
@@ -157,7 +157,7 @@ export default function Home() {
                     {n}
                   </p>
                   <p className="mt-1 text-sm text-[var(--color-ink-soft)]">
-                    {count} {count === 1 ? "listing" : "listings"}
+                    {count} {count === 1 ? t("listing") : t("listings")}
                   </p>
                 </Link>
               );

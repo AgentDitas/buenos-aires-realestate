@@ -8,7 +8,7 @@ import { useFavorites } from "@/hooks/useFavorites";
 import { useCompare } from "@/hooks/useCompare";
 
 export default function PropertyCard({ property }: { property: Property }) {
-  const { formatAmount } = useAppSettings();
+  const { formatAmount, t, language } = useAppSettings();
   const { isFavorite, toggleFavorite } = useFavorites();
   const { isComparing, toggleCompare, isFull } = useCompare();
   const [loaded, setLoaded] = useState(false);
@@ -25,6 +25,7 @@ export default function PropertyCard({ property }: { property: Property }) {
   const favorited = isFavorite(property.id);
   const comparing = isComparing(property.id);
   const compareDisabled = !comparing && isFull;
+  const displayTitle = language === "ES" ? property.titleEs : property.title;
 
   return (
     <Link
@@ -58,7 +59,7 @@ export default function PropertyCard({ property }: { property: Property }) {
           <img
             ref={checkAlreadyLoaded}
             src={property.image}
-            alt={property.title}
+            alt={displayTitle}
             onLoad={() => setLoaded(true)}
             onError={() => setErrored(true)}
             style={{
@@ -75,7 +76,7 @@ export default function PropertyCard({ property }: { property: Property }) {
         )}
 
         <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium uppercase tracking-wide text-[var(--color-ink)]">
-          {property.operation === "buy" ? "For Sale" : "For Rent"}
+          {property.operation === "buy" ? t("forSale") : t("forRent")}
         </span>
 
         <button
@@ -115,7 +116,7 @@ export default function PropertyCard({ property }: { property: Property }) {
               : "bg-white/90 text-[var(--color-ink)] hover:bg-white"
           }`}
         >
-          {comparing ? "✓ Comparing" : "+ Compare"}
+          {comparing ? `✓ ${t("comparing")}` : `+ ${t("compare")}`}
         </button>
       </div>
 
@@ -124,12 +125,12 @@ export default function PropertyCard({ property }: { property: Property }) {
           {property.neighborhood} · {property.type}
         </p>
         <h3 className="font-display text-lg leading-snug text-[var(--color-ink)]">
-          {property.title}
+          {displayTitle}
         </h3>
 
         <div className="flex items-center gap-4 text-sm text-[var(--color-ink-soft)]">
-          <span>{property.bedrooms} bed</span>
-          <span>{property.bathrooms} bath</span>
+          <span>{property.bedrooms} {t("bed")}</span>
+          <span>{property.bathrooms} {t("bath")}</span>
           <span>{property.areaM2} m²</span>
         </div>
 
@@ -138,7 +139,7 @@ export default function PropertyCard({ property }: { property: Property }) {
             {formatAmount(property.priceUSD, property.operation === "rent")}
           </span>
           <span className="rounded-sm border border-[var(--color-line)] px-3 py-1.5 text-xs font-medium uppercase tracking-wide text-[var(--color-ink-soft)] transition-colors group-hover:border-[var(--color-ink)] group-hover:text-[var(--color-ink)]">
-            View
+            {t("view")}
           </span>
         </div>
       </div>
