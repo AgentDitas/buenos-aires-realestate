@@ -1,7 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense } from "react";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import PropertyCard from "@/components/PropertyCard";
 import { properties, Property } from "@/data/properties";
 
@@ -20,56 +22,81 @@ const TYPES: Property["type"][] = ["Apartamento", "PH", "Casa", "Loft"];
 
 type SortOption = "price-asc" | "price-desc" | "beds-desc" | "area-desc";
 
-export default function SearchPage() {
-  const [operation, setOperation] = useState<"all" | "buy" | "rent">("all");
-  const [selectedNeighborhoods, setSelectedNeighborhoods] = useState<string[]>([]);
-  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
-  const [minBeds, setMinBeds] = useState(0);
-  const [minBaths, setMinBaths] = useState(0);
-  const [sortBy, setSortBy] = useState<SortOption>("price-asc");
+function SearchPageContent() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const operationParam = searchParams.get("operation");
+  const operation: "all" | "buy" | "rent" =
+    operationParam === "buy" || operationParam === "rent" ? operationParam : "all";
+
+  const selectedNeighborhoods = (searchParams.get("neighborhood") || "")
+    .split(",")
+    .filter(Boolean);
+
+  const selectedTypes = (searchParams.get("propertyType") || "")
+    .split(",")
+    .filter(Boolean);
+
+  const minPrice = searchParams.get("minPrice") || "";
+  const maxPrice = searchParams.get("maxPrice") || "";
+  const minBeds = Number(searchParams.get("bedrooms") || 0);
+  const minBaths = Number(searchParams.get("bathrooms") || 0);
+
+  const sortParam = searchParams.get("sort");
+  const sortBy: SortOption =
+    sortParam === "price-asc" ||
+    sortParam === "price-desc" ||
+    sortParam === "beds-desc" ||
+    sortParam === "area-desc"
+      ? sortParam
+      : "price-asc";
+
+  function updateParams(updates: Record<string, string | null>) {
+    const params = new URLSearchParams(searchParams.toString());
+    for (const [key, value] of Object.entries(updates)) {
+      if (value === null || value === "") {
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
+    }
+    const query = params.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+  }
 
   function toggleNeighborhood(n: string) {
-    setSelectedNeighborhoods((prev) =>
-      prev.includes(n) ? prev.filter((x) => x !== n) : [...prev, n]
-    );
+    const next = selectedNeighborhoods.includes(n)
+      ? selectedNeighborhoods.filter((x) => x !== n)
+      : [...selectedNeighborhoods, n];
+    updateParams({ neighborhood: next.join(",") || null });
   }
 
   function toggleType(t: string) {
-    setSelectedTypes((prev) =>
-      prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]
-    );
+    const next = selectedTypes.includes(t)
+      ? selectedTypes.filter((x) => x !== t)
+      : [...selectedTypes, t];
+    updateParams({ propertyType: next.join(",") || null });
   }
 
   function clearFilters() {
-    setOperation("all");
-    setSelectedNeighborhoods([]);
-    setSelectedTypes([]);
-    setMinPrice("");
-    setMaxPrice("");
-    setMinBeds(0);
-    setMinBaths(0);
+    router.replace(pathname, { scroll: false });
   }
 
-  const results = useMemo(() => {
-    let list = properties.filter((p) => {
+  const results = properties
+    .filter((p) => {
       if (operation !== "all" && p.operation !== operation) return false;
-      if (
-        selectedNeighborhoods.length > 0 &&
-        !selectedNeighborhoods.includes(p.neighborhood)
-      )
+      if (selectedNeighborhoods.length > 0 && !selectedNeighborhoods.includes(p.neighborhood))
         return false;
-      if (selectedTypes.length > 0 && !selectedTypes.includes(p.type))
-        return false;
+      if (selectedTypes.length > 0 && !selectedTypes.includes(p.type)) return false;
       if (minPrice && p.priceUSD < Number(minPrice)) return false;
       if (maxPrice && p.priceUSD > Number(maxPrice)) return false;
       if (p.bedrooms < minBeds) return false;
       if (p.bathrooms < minBaths) return false;
       return true;
-    });
-
-    list = [...list].sort((a, b) => {
+    })
+    .sort((a, b) => {
       switch (sortBy) {
         case "price-asc":
           return a.priceUSD - b.priceUSD;
@@ -82,18 +109,6 @@ export default function SearchPage() {
       }
     });
 
-    return list;
-  }, [
-    operation,
-    selectedNeighborhoods,
-    selectedTypes,
-    minPrice,
-    maxPrice,
-    minBeds,
-    minBaths,
-    sortBy,
-  ]);
-
   return (
     <div className="min-h-screen">
       <Header />
@@ -104,7 +119,6 @@ export default function SearchPage() {
         </h1>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[240px_1fr_280px]">
-          {/* Filters */}
           <aside className="flex flex-col gap-6">
             <div>
               <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[var(--color-brass)]">
@@ -114,7 +128,7 @@ export default function SearchPage() {
                 {(["all", "buy", "rent"] as const).map((op) => (
                   <button
                     key={op}
-                    onClick={() => setOperation(op)}
+                    onClick={() => updateParams({ operation: op === "all" ? null : op })}
                     className={`flex-1 px-3 py-2 text-sm font-medium capitalize transition-colors ${
                       operation === op
                         ? "bg-[var(--color-patina)] text-white"
@@ -136,7 +150,7 @@ export default function SearchPage() {
                   type="number"
                   placeholder="Min"
                   value={minPrice}
-                  onChange={(e) => setMinPrice(e.target.value)}
+                  onChange={(e) => updateParams({ minPrice: e.target.value || null })}
                   className="w-full rounded-sm border border-[var(--color-line)] bg-white px-2 py-1.5 text-sm outline-none focus:border-[var(--color-patina)]"
                 />
                 <span className="text-[var(--color-ink-soft)]">–</span>
@@ -144,7 +158,7 @@ export default function SearchPage() {
                   type="number"
                   placeholder="Max"
                   value={maxPrice}
-                  onChange={(e) => setMaxPrice(e.target.value)}
+                  onChange={(e) => updateParams({ maxPrice: e.target.value || null })}
                   className="w-full rounded-sm border border-[var(--color-line)] bg-white px-2 py-1.5 text-sm outline-none focus:border-[var(--color-patina)]"
                 />
               </div>
@@ -156,7 +170,9 @@ export default function SearchPage() {
               </p>
               <select
                 value={minBeds}
-                onChange={(e) => setMinBeds(Number(e.target.value))}
+                onChange={(e) =>
+                  updateParams({ bedrooms: e.target.value === "0" ? null : e.target.value })
+                }
                 className="w-full rounded-sm border border-[var(--color-line)] bg-white px-2 py-1.5 text-sm outline-none focus:border-[var(--color-patina)]"
               >
                 <option value={0}>Any</option>
@@ -173,7 +189,9 @@ export default function SearchPage() {
               </p>
               <select
                 value={minBaths}
-                onChange={(e) => setMinBaths(Number(e.target.value))}
+                onChange={(e) =>
+                  updateParams({ bathrooms: e.target.value === "0" ? null : e.target.value })
+                }
                 className="w-full rounded-sm border border-[var(--color-line)] bg-white px-2 py-1.5 text-sm outline-none focus:border-[var(--color-patina)]"
               >
                 <option value={0}>Any</option>
@@ -235,16 +253,14 @@ export default function SearchPage() {
             </button>
           </aside>
 
-          {/* Results */}
           <div>
             <div className="mb-4 flex items-center justify-between">
               <p className="text-sm text-[var(--color-ink-soft)]">
-                {results.length} {results.length === 1 ? "property" : "properties"}{" "}
-                found
+                {results.length} {results.length === 1 ? "property" : "properties"} found
               </p>
               <select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as SortOption)}
+                onChange={(e) => updateParams({ sort: e.target.value })}
                 className="rounded-sm border border-[var(--color-line)] bg-white px-2 py-1.5 text-sm outline-none focus:border-[var(--color-patina)]"
               >
                 <option value="price-asc">Price: Low to High</option>
@@ -267,7 +283,6 @@ export default function SearchPage() {
             )}
           </div>
 
-          {/* Map placeholder */}
           <div className="hidden lg:block">
             <div className="sticky top-24 flex h-96 flex-col items-center justify-center gap-2 rounded-sm border border-dashed border-[var(--color-line)] bg-[var(--color-canvas-alt)] text-center">
               <svg
@@ -283,13 +298,21 @@ export default function SearchPage() {
               <p className="text-sm font-medium text-[var(--color-ink-soft)]">
                 Interactive map
               </p>
-              <p className="max-w-[70%] text-xs text-[var(--color-ink-soft)]">
-                Coming soon
-              </p>
+              <p className="max-w-[70%] text-xs text-[var(--color-ink-soft)]">Coming soon</p>
             </div>
           </div>
         </div>
       </div>
+
+      <Footer />
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen" />}>
+      <SearchPageContent />
+    </Suspense>
   );
 }
