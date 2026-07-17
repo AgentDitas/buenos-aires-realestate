@@ -4,9 +4,11 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import { Property } from "@/data/properties";
 import { useAppSettings } from "@/contexts/AppSettingsContext";
+import { useFavorites } from "@/hooks/useFavorites";
 
 export default function PropertyCard({ property }: { property: Property }) {
   const { formatAmount } = useAppSettings();
+  const { isFavorite, toggleFavorite } = useFavorites();
   const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -17,6 +19,8 @@ export default function PropertyCard({ property }: { property: Property }) {
       setLoaded(true);
     }
   }
+
+  const favorited = isFavorite(property.id);
 
   return (
     <Link
@@ -69,6 +73,27 @@ export default function PropertyCard({ property }: { property: Property }) {
         <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium uppercase tracking-wide text-[var(--color-ink)]">
           {property.operation === "buy" ? "For Sale" : "For Rent"}
         </span>
+
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleFavorite(property.id);
+          }}
+          aria-label={favorited ? "Remove from favorites" : "Save to favorites"}
+          className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 transition-transform hover:scale-110"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            className="h-4 w-4"
+            fill={favorited ? "#B23A48" : "none"}
+            stroke={favorited ? "#B23A48" : "var(--color-ink)"}
+            strokeWidth="1.8"
+          >
+            <path d="M12 20.5S3 14.6 3 8.9C3 5.9 5.4 3.5 8.3 3.5c1.7 0 3.2.8 4.2 2.1a5.2 5.2 0 0 1 8.5 4c0 5.7-9 11.9-9 11.9Z" />
+          </svg>
+        </button>
       </div>
 
       <div className="flex flex-1 flex-col gap-2 p-4">
