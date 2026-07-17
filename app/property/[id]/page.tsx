@@ -1,18 +1,21 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PropertyCard from "@/components/PropertyCard";
+import ForeignBuyerHub from "@/components/ForeignBuyerHub";
 import { properties } from "@/data/properties";
 import { useAppSettings } from "@/contexts/AppSettingsContext";
+import { useFavorites } from "@/hooks/useFavorites";
 
 export default function PropertyDetailsPage() {
   const params = useParams();
   const id = params.id as string;
   const { formatAmount } = useAppSettings();
+  const { isFavorite, toggleFavorite } = useFavorites();
   const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
 
@@ -46,6 +49,8 @@ export default function PropertyDetailsPage() {
       </div>
     );
   }
+
+  const favorited = isFavorite(property.id);
 
   const whatsappText = "Hi, I am interested in " + property.title + " (" + property.neighborhood + "). Is it still available?";
   const whatsappMessage = encodeURIComponent(whatsappText);
@@ -192,12 +197,31 @@ export default function PropertyDetailsPage() {
                 Contact via WhatsApp
               </a>
 
+              <button
+                type="button"
+                onClick={() => toggleFavorite(property.id)}
+                className="mt-3 flex w-full items-center justify-center gap-2 rounded-sm border border-[var(--color-ink)] px-5 py-3 text-sm font-medium text-[var(--color-ink)] transition-colors hover:bg-[var(--color-ink)] hover:text-white"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  className="h-4 w-4"
+                  fill={favorited ? "#B23A48" : "none"}
+                  stroke={favorited ? "#B23A48" : "currentColor"}
+                  strokeWidth="1.8"
+                >
+                  <path d="M12 20.5S3 14.6 3 8.9C3 5.9 5.4 3.5 8.3 3.5c1.7 0 3.2.8 4.2 2.1a5.2 5.2 0 0 1 8.5 4c0 5.7-9 11.9-9 11.9Z" />
+                </svg>
+                {favorited ? "Saved to Favorites" : "Save to Favorites"}
+              </button>
+
               <p className="mt-3 text-center text-xs text-[var(--color-ink-soft)]">
                 Opens a pre-filled message on WhatsApp
               </p>
             </div>
           </div>
         </div>
+
+        <ForeignBuyerHub property={property} />
 
         {similar.length > 0 && (
           <div className="mt-16">
