@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy | Altura",
+  description:
+    "How Altura handles your information when you browse or inquire about Buenos Aires real estate listings.",
+};
 
 export default function PrivacyPage() {
   return (

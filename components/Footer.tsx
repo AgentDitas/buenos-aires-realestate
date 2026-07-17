@@ -61,12 +61,12 @@ export default function Footer() {
             </p>
             <ul className="mt-3 flex flex-col gap-2 text-sm text-[var(--color-ink-soft)]">
               <li>
-                <Link href="#" className="hover:text-[var(--color-ink)]">
+                <Link href="/privacy" className="hover:text-[var(--color-ink)]">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-[var(--color-ink)]">
+                <Link href="/terms" className="hover:text-[var(--color-ink)]">
                   Terms
                 </Link>
               </li>

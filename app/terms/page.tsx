@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+
+export const metadata: Metadata = {
+  title: "Terms of Service | Altura",
+  description:
+    "The terms governing your use of the Altura real estate platform.",
+};
 
 export default function TermsPage() {
   return (
