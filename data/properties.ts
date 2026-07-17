@@ -24,6 +24,8 @@ export type Property = {
   address: string;
   agentName: string;
   agentWhatsapp: string;
+  lat: number;
+  lng: number;
 };
 
 export const properties: Property[] = [
@@ -47,6 +49,8 @@ export const properties: Property[] = [
     address: "Gurruchaga 1800, Palermo",
     agentName: "Martina Ibarra",
     agentWhatsapp: "5491122334455",
+    lat: -34.5877,
+    lng: -58.4297,
   },
   {
     id: "2",
@@ -68,6 +72,8 @@ export const properties: Property[] = [
     address: "Vicente López 1900, Recoleta",
     agentName: "Julián Souza",
     agentWhatsapp: "5491133445566",
+    lat: -34.5895,
+    lng: -58.3927,
   },
   {
     id: "3",
@@ -89,6 +95,8 @@ export const properties: Property[] = [
     address: "Juana Manso 800, Puerto Madero",
     agentName: "Camila Duarte",
     agentWhatsapp: "5491144556677",
+    lat: -34.6118,
+    lng: -58.3627,
   },
   {
     id: "4",
@@ -110,6 +118,8 @@ export const properties: Property[] = [
     address: "Echeverría 2200, Belgrano",
     agentName: "Martina Ibarra",
     agentWhatsapp: "5491122334455",
+    lat: -34.5622,
+    lng: -58.4548,
   },
   {
     id: "5",
@@ -131,6 +141,8 @@ export const properties: Property[] = [
     address: "Thames 700, Villa Crespo",
     agentName: "Nicolás Ferro",
     agentWhatsapp: "5491155667788",
+    lat: -34.5989,
+    lng: -58.4372,
   },
   {
     id: "6",
@@ -152,6 +164,8 @@ export const properties: Property[] = [
     address: "Defensa 1100, San Telmo",
     agentName: "Camila Duarte",
     agentWhatsapp: "5491144556677",
+    lat: -34.6212,
+    lng: -58.3731,
   },
   {
     id: "7",
@@ -173,6 +187,8 @@ export const properties: Property[] = [
     address: "Rosario 500, Caballito",
     agentName: "Nicolás Ferro",
     agentWhatsapp: "5491155667788",
+    lat: -34.6178,
+    lng: -58.4408,
   },
   {
     id: "8",
@@ -194,6 +210,8 @@ export const properties: Property[] = [
     address: "Av. del Libertador 6200, Núñez",
     agentName: "Julián Souza",
     agentWhatsapp: "5491133445566",
+    lat: -34.5459,
+    lng: -58.4634,
   },
   {
     id: "9",
@@ -215,6 +233,8 @@ export const properties: Property[] = [
     address: "Honduras 4700, Palermo",
     agentName: "Martina Ibarra",
     agentWhatsapp: "5491122334455",
+    lat: -34.5836,
+    lng: -58.4341,
   },
   {
     id: "10",
@@ -236,6 +256,8 @@ export const properties: Property[] = [
     address: "Ayacucho 1700, Recoleta",
     agentName: "Nicolás Ferro",
     agentWhatsapp: "5491155667788",
+    lat: -34.5917,
+    lng: -58.3891,
   },
   {
     id: "11",
@@ -257,6 +279,8 @@ export const properties: Property[] = [
     address: "Olga Cossettini 700, Puerto Madero",
     agentName: "Camila Duarte",
     agentWhatsapp: "5491144556677",
+    lat: -34.6155,
+    lng: -58.3639,
   },
   {
     id: "12",
@@ -278,5 +302,7 @@ export const properties: Property[] = [
     address: "Zapiola 2300, Belgrano",
     agentName: "Julián Souza",
     agentWhatsapp: "5491133445566",
+    lat: -34.5687,
+    lng: -58.4531,
   },
 ];

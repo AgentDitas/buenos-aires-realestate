@@ -149,7 +149,6 @@ const TRANSLATIONS = {
   },
   bookFreeConsultation: { EN: "Book a Free Consultation", ES: "Reservar Consulta Gratuita" },
 
-  // Footer
   explore: { EN: "Explore", ES: "Explorar" },
   contact: { EN: "Contact", ES: "Contacto" },
   legal: { EN: "Legal", ES: "Legal" },
@@ -166,7 +165,6 @@ const TRANSLATIONS = {
   },
   browseListings: { EN: "Browse Listings", ES: "Ver Propiedades" },
 
-  // Compare page
   compareProperties: { EN: "Compare Properties", ES: "Comparar Propiedades" },
   upToThree: { EN: "Up to 3 properties, side by side.", ES: "Hasta 3 propiedades, lado a lado." },
   clearAll: { EN: "Clear all", ES: "Limpiar todo" },
@@ -189,13 +187,38 @@ const TRANSLATIONS = {
     ES: "Estimaciones solo a modo ilustrativo — los costos y puntajes reales varían.",
   },
 
-  // 404
   pageNotFound: { EN: "Page not found", ES: "Página no encontrada" },
   pageNotFoundDetail: {
     EN: "The page you're looking for doesn't exist or may have moved.",
     ES: "La página que buscás no existe o puede haber cambiado de lugar.",
   },
   backToHome: { EN: "Back to Home", ES: "Volver al Inicio" },
+
+  // Altura Score
+  alturaScore: { EN: "Altura Score", ES: "Puntaje Altura" },
+  alturaScoreIntro: {
+    EN: "A trust and suitability score unique to Altura, combining four factors below.",
+    ES: "Un puntaje de confianza y aptitud exclusivo de Altura, que combina los cuatro factores de abajo.",
+  },
+  investmentPotential: { EN: "Investment Potential", ES: "Potencial de Inversión" },
+  foreignBuyerFriendliness: { EN: "Foreign Buyer Friendliness", ES: "Aptitud para Compradores Extranjeros" },
+  valueForMoney: { EN: "Value for Money", ES: "Relación Precio-Calidad" },
+  investmentExplanation: {
+    EN: "Based on this property's price per m² compared to the average for its neighborhood.",
+    ES: "Basado en el precio por m² de esta propiedad comparado con el promedio del barrio.",
+  },
+  foreignBuyerExplanation: {
+    EN: "Reflects whether remote purchase, English-speaking support, and legal assistance are available for this listing.",
+    ES: "Refleja si hay compra remota, soporte en inglés y asistencia legal disponibles para esta propiedad.",
+  },
+  walkabilityExplanation: {
+    EN: "Based on the walkability rating of this property's neighborhood.",
+    ES: "Basado en el puntaje de caminabilidad del barrio de esta propiedad.",
+  },
+  valueExplanation: {
+    EN: "Based on this property's price per m² compared to similar listings citywide.",
+    ES: "Basado en el precio por m² de esta propiedad comparado con propiedades similares en toda la ciudad.",
+  },
 } as const;
 
 type TranslationKey = keyof typeof TRANSLATIONS;

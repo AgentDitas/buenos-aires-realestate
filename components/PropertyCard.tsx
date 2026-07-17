@@ -6,6 +6,7 @@ import { Property } from "@/data/properties";
 import { useAppSettings } from "@/contexts/AppSettingsContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useCompare } from "@/hooks/useCompare";
+import AlturaScoreBadge from "@/components/AlturaScoreBadge";
 
 export default function PropertyCard({ property }: { property: Property }) {
   const { formatAmount, t, language } = useAppSettings();
@@ -133,6 +134,8 @@ export default function PropertyCard({ property }: { property: Property }) {
           <span>{property.bathrooms} {t("bath")}</span>
           <span>{property.areaM2} m²</span>
         </div>
+
+        <AlturaScoreBadge property={property} />
 
         <div className="mt-auto flex items-center justify-between pt-3">
           <span className="font-display text-xl text-[var(--color-ink)]">

@@ -2,11 +2,16 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { properties } from "@/data/properties";
 import PropertyCard from "@/components/PropertyCard";
 import { useAppSettings } from "@/contexts/AppSettingsContext";
+
+const PropertyMap = dynamic(() => import("@/components/PropertyMap"), {
+  ssr: false,
+});
 
 const NEIGHBORHOODS = [
   "Palermo",
@@ -62,58 +67,64 @@ export default function Home() {
           ))}
         </svg>
 
-        <div className="relative mx-auto max-w-6xl px-6 py-20 md:py-28">
-          <h1 className="font-display max-w-xl text-4xl leading-tight text-[var(--color-ink)] md:text-5xl">
-            {t("heroHeadline")}
-          </h1>
-          <p className="mt-4 max-w-md text-[var(--color-ink-soft)]">
-            {t("heroSubtext")}
-          </p>
-
-          <Link
-            href="/search"
-            className="mt-6 inline-block rounded-sm bg-[var(--color-patina)] px-6 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90"
-          >
-            {t("browseProperties")}
-          </Link>
-
-          <div className="mt-6 flex max-w-2xl flex-col gap-3 rounded-sm border border-[var(--color-line)] bg-white p-3 shadow-sm sm:flex-row sm:items-center">
-            <div className="flex overflow-hidden rounded-sm border border-[var(--color-line)]">
-              {(["buy", "rent"] as const).map((op) => (
-                <button
-                  key={op}
-                  onClick={() => setOperation(op)}
-                  className={`px-4 py-2 text-sm font-medium capitalize transition-colors ${
-                    operation === op
-                      ? "bg-[var(--color-patina)] text-white"
-                      : "text-[var(--color-ink-soft)]"
-                  }`}
-                >
-                  {t(op)}
-                </button>
-              ))}
-            </div>
-
-            <select
-              className="flex-1 border-none bg-transparent text-sm text-[var(--color-ink)] outline-none"
-              defaultValue=""
-            >
-              <option value="" disabled>
-                {t("selectNeighborhood")}
-              </option>
-              {NEIGHBORHOODS.map((n) => (
-                <option key={n} value={n}>
-                  {n}
-                </option>
-              ))}
-            </select>
+        <div className="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-6 py-20 md:py-28 lg:grid-cols-2">
+          <div>
+            <h1 className="font-display max-w-xl text-4xl leading-tight text-[var(--color-ink)] md:text-5xl">
+              {t("heroHeadline")}
+            </h1>
+            <p className="mt-4 max-w-md text-[var(--color-ink-soft)]">
+              {t("heroSubtext")}
+            </p>
 
             <Link
-              href={`/search?operation=${operation}`}
-              className="rounded-sm bg-[var(--color-ink)] px-5 py-2 text-center text-sm font-medium text-white transition-opacity hover:opacity-90"
+              href="/search"
+              className="mt-6 inline-block rounded-sm bg-[var(--color-patina)] px-6 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90"
             >
-              {t("search")}
+              {t("browseProperties")}
             </Link>
+
+            <div className="mt-6 flex max-w-2xl flex-col gap-3 rounded-sm border border-[var(--color-line)] bg-white p-3 shadow-sm sm:flex-row sm:items-center">
+              <div className="flex overflow-hidden rounded-sm border border-[var(--color-line)]">
+                {(["buy", "rent"] as const).map((op) => (
+                  <button
+                    key={op}
+                    onClick={() => setOperation(op)}
+                    className={`px-4 py-2 text-sm font-medium capitalize transition-colors ${
+                      operation === op
+                        ? "bg-[var(--color-patina)] text-white"
+                        : "text-[var(--color-ink-soft)]"
+                    }`}
+                  >
+                    {t(op)}
+                  </button>
+                ))}
+              </div>
+
+              <select
+                className="flex-1 border-none bg-transparent text-sm text-[var(--color-ink)] outline-none"
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  {t("selectNeighborhood")}
+                </option>
+                {NEIGHBORHOODS.map((n) => (
+                  <option key={n} value={n}>
+                    {n}
+                  </option>
+                ))}
+              </select>
+
+              <Link
+                href={`/search?operation=${operation}`}
+                className="rounded-sm bg-[var(--color-ink)] px-5 py-2 text-center text-sm font-medium text-white transition-opacity hover:opacity-90"
+              >
+                {t("search")}
+              </Link>
+            </div>
+          </div>
+
+          <div className="h-[380px] overflow-hidden rounded-sm border border-[var(--color-line)] shadow-sm md:h-[440px]">
+            <PropertyMap properties={properties} />
           </div>
         </div>
       </section>

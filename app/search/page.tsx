@@ -1,12 +1,17 @@
 "use client";
 
 import { Suspense, useState } from "react";
+import dynamic from "next/dynamic";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PropertyCard from "@/components/PropertyCard";
 import { properties, Property } from "@/data/properties";
 import { useAppSettings } from "@/contexts/AppSettingsContext";
+
+const PropertyMap = dynamic(() => import("@/components/PropertyMap"), {
+  ssr: false,
+});
 
 const NEIGHBORHOODS: Property["neighborhood"][] = [
   "Palermo",
@@ -299,21 +304,8 @@ function SearchPageContent() {
           </div>
 
           <div className="hidden lg:block">
-            <div className="sticky top-24 flex h-96 flex-col items-center justify-center gap-2 rounded-sm border border-dashed border-[var(--color-line)] bg-[var(--color-canvas-alt)] text-center">
-              <svg
-                viewBox="0 0 24 24"
-                className="h-8 w-8 text-[var(--color-brass)]"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              >
-                <path d="M12 21s-7-6.5-7-11a7 7 0 0 1 14 0c0 4.5-7 11-7 11z" />
-                <circle cx="12" cy="10" r="2.5" />
-              </svg>
-              <p className="text-sm font-medium text-[var(--color-ink-soft)]">
-                {t("interactiveMap")}
-              </p>
-              <p className="max-w-[70%] text-xs text-[var(--color-ink-soft)]">{t("comingSoon")}</p>
+            <div className="sticky top-24 h-96 overflow-hidden rounded-sm border border-[var(--color-line)]">
+              <PropertyMap properties={results} />
             </div>
           </div>
         </div>
