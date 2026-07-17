@@ -38,7 +38,6 @@ const TRANSLATIONS = {
   view: { EN: "View", ES: "Ver" },
   comparing: { EN: "Comparing", ES: "Comparando" },
 
-  // Search page
   searchListings: { EN: "Search Listings", ES: "Buscar Propiedades" },
   buyOrRent: { EN: "Buy or Rent", ES: "Comprar o Alquilar" },
   all: { EN: "All", ES: "Todos" },
@@ -70,6 +69,87 @@ const TRANSLATIONS = {
   ph: { EN: "PH", ES: "PH" },
   casa: { EN: "House", ES: "Casa" },
   loft: { EN: "Loft", ES: "Loft" },
+
+  // Property details page
+  backToSearch: { EN: "Back to Search", ES: "Volver a la Búsqueda" },
+  description: { EN: "Description", ES: "Descripción" },
+  amenities: { EN: "Amenities", ES: "Amenities" },
+  listingAgent: { EN: "Listing Agent", ES: "Agente Inmobiliario" },
+  contactViaWhatsapp: { EN: "Contact via WhatsApp", ES: "Contactar por WhatsApp" },
+  opensPrefilledMessage: {
+    EN: "Opens a pre-filled message on WhatsApp",
+    ES: "Abre un mensaje pre-escrito en WhatsApp",
+  },
+  saveToFavorites: { EN: "Save to Favorites", ES: "Guardar en Favoritos" },
+  savedToFavorites: { EN: "Saved to Favorites", ES: "Guardado en Favoritos" },
+  similarProperties: { EN: "Similar Properties", ES: "Propiedades Similares" },
+  propertyNotFound: { EN: "Property not found", ES: "Propiedad no encontrada" },
+  listingRemovedOrIncorrect: {
+    EN: "This listing may have been removed or the link is incorrect.",
+    ES: "Esta propiedad puede haber sido eliminada o el enlace es incorrecto.",
+  },
+
+  // Foreign Buyer's Hub
+  buyingAsForeigner: { EN: "🌎 Buying as a Foreigner", ES: "🌎 Comprando como Extranjero" },
+  canForeignersBuy: { EN: "Can Foreigners Buy?", ES: "¿Pueden Comprar los Extranjeros?" },
+  yesAnswer: { EN: "✅ Yes", ES: "✅ Sí" },
+  estimatedTimeToClose: { EN: "Estimated Time to Close", ES: "Tiempo Estimado de Cierre" },
+  days3060: { EN: "30–60 days", ES: "30–60 días" },
+  purchaseMethod: { EN: "Purchase Method", ES: "Método de Compra" },
+  remotePurchaseAvailable: { EN: "Remote purchase available", ES: "Compra remota disponible" },
+  languageSupport: { EN: "Language Support", ES: "Soporte de Idioma" },
+  englishSpeakingAgentAvailable: {
+    EN: "English-speaking agent available",
+    ES: "Agente de habla inglesa disponible",
+  },
+  legalAssistance: { EN: "Legal Assistance", ES: "Asistencia Legal" },
+  availableTrustedPartners: {
+    EN: "Available through trusted partners",
+    ES: "Disponible a través de socios de confianza",
+  },
+  financing: { EN: "Financing", ES: "Financiamiento" },
+  financingDetail: {
+    EN: "Cash purchase recommended — mortgage availability varies",
+    ES: "Se recomienda compra en efectivo — la disponibilidad de hipoteca varía",
+  },
+  estimatedTotalCost: { EN: "💰 Estimated Total Purchase Cost", ES: "💰 Costo Total Estimado de Compra" },
+  propertyPrice: { EN: "Property Price", ES: "Precio de la Propiedad" },
+  estimatedClosingCosts: { EN: "Estimated Closing Costs", ES: "Costos de Cierre Estimados" },
+  estimatedCashRequired: { EN: "Estimated Cash Required", ES: "Efectivo Estimado Requerido" },
+  monthlyHoa: { EN: "Monthly HOA (expensas)", ES: "Expensas Mensuales" },
+  estimatedPropertyTaxes: { EN: "Estimated Property Taxes", ES: "Impuestos Estimados" },
+  estimatesIllustrationOnly: {
+    EN: "Estimates for illustration only — actual costs vary by transaction.",
+    ES: "Estimaciones solo a modo ilustrativo — los costos reales varían según la transacción.",
+  },
+  buyingProcess: { EN: "📄 Buying Process", ES: "📄 Proceso de Compra" },
+  stepInquiry: { EN: "Inquiry", ES: "Consulta" },
+  stepVideoTour: { EN: "Property Video Tour", ES: "Video Tour de la Propiedad" },
+  stepOffer: { EN: "Offer", ES: "Oferta" },
+  stepAttorneyReview: { EN: "Attorney Review", ES: "Revisión Legal" },
+  stepPurchaseAgreement: { EN: "Purchase Agreement", ES: "Boleto de Compraventa" },
+  stepClosing: { EN: "Closing", ES: "Cierre" },
+  stepKeys: { EN: "Receive Keys", ES: "Entrega de Llaves" },
+  neighborhoodSnapshot: { EN: "📍 Neighborhood Snapshot", ES: "📍 Resumen del Barrio" },
+  walkability: { EN: "Walkability", ES: "Caminabilidad" },
+  nightlife: { EN: "Nightlife", ES: "Vida Nocturna" },
+  families: { EN: "Families", ES: "Familias" },
+  parks: { EN: "Parks", ES: "Parques" },
+  luxury: { EN: "Luxury", ES: "Lujo" },
+  digitalNomads: { EN: "Digital Nomads", ES: "Nómadas Digitales" },
+  avgPricePerM2: { EN: "Average Price/m²", ES: "Precio Promedio/m²" },
+  popularRestaurants: { EN: "Popular Restaurants", ES: "Restaurantes Populares" },
+  subwayAccess: { EN: "Subway Access", ES: "Acceso al Subte" },
+  illustrativeEstimatesOnly: {
+    EN: "Illustrative estimates for prototype purposes only.",
+    ES: "Estimaciones ilustrativas solo para fines del prototipo.",
+  },
+  needHelp: { EN: "📞 Need Help?", ES: "📞 ¿Necesitás Ayuda?" },
+  bookConsultation: {
+    EN: "Book a free consultation — we'll connect you with a realtor, attorney, accountant, and property manager.",
+    ES: "Reservá una consulta gratuita — te conectamos con un agente inmobiliario, abogado, contador y administrador de propiedades.",
+  },
+  bookFreeConsultation: { EN: "Book a Free Consultation", ES: "Reservar Consulta Gratuita" },
 } as const;
 
 type TranslationKey = keyof typeof TRANSLATIONS;

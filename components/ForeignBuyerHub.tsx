@@ -1,16 +1,7 @@
 import { Property } from "@/data/properties";
 import { NEIGHBORHOOD_INFO } from "@/data/neighborhoodInfo";
 import { estimatePurchaseCosts, formatRange, formatUSD } from "@/lib/purchaseEstimate";
-
-const BUYING_STEPS = [
-  "Inquiry",
-  "Property Video Tour",
-  "Offer",
-  "Attorney Review",
-  "Purchase Agreement",
-  "Closing",
-  "Receive Keys",
-];
+import { useAppSettings } from "@/contexts/AppSettingsContext";
 
 function StarRating({ value }: { value: number }) {
   return (
@@ -22,75 +13,82 @@ function StarRating({ value }: { value: number }) {
 }
 
 export default function ForeignBuyerHub({ property }: { property: Property }) {
+  const { t } = useAppSettings();
   const isBuy = property.operation === "buy";
   const info = NEIGHBORHOOD_INFO[property.neighborhood];
   const costs = isBuy
     ? estimatePurchaseCosts(property.priceUSD, property.areaM2)
     : null;
 
+  const buyingSteps = [
+    t("stepInquiry"),
+    t("stepVideoTour"),
+    t("stepOffer"),
+    t("stepAttorneyReview"),
+    t("stepPurchaseAgreement"),
+    t("stepClosing"),
+    t("stepKeys"),
+  ];
+
   return (
     <div className="mt-16 border-t border-[var(--color-line)] pt-12">
       {isBuy && costs && (
         <>
-          {/* Buying as a Foreigner */}
           <div className="rounded-sm border border-[var(--color-line)] bg-[var(--color-canvas-alt)] p-6">
             <h2 className="font-display text-xl text-[var(--color-ink)]">
-              🌎 Buying as a Foreigner
+              {t("buyingAsForeigner")}
             </h2>
             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <p className="text-xs font-medium uppercase tracking-wide text-[var(--color-brass)]">
-                  Can Foreigners Buy?
+                  {t("canForeignersBuy")}
                 </p>
-                <p className="mt-1 text-sm text-[var(--color-ink)]">✅ Yes</p>
+                <p className="mt-1 text-sm text-[var(--color-ink)]">{t("yesAnswer")}</p>
               </div>
               <div>
                 <p className="text-xs font-medium uppercase tracking-wide text-[var(--color-brass)]">
-                  Estimated Time to Close
+                  {t("estimatedTimeToClose")}
                 </p>
-                <p className="mt-1 text-sm text-[var(--color-ink)]">30–60 days</p>
+                <p className="mt-1 text-sm text-[var(--color-ink)]">{t("days3060")}</p>
               </div>
               <div>
                 <p className="text-xs font-medium uppercase tracking-wide text-[var(--color-brass)]">
-                  Purchase Method
+                  {t("purchaseMethod")}
                 </p>
-                <p className="mt-1 text-sm text-[var(--color-ink)]">Remote purchase available</p>
+                <p className="mt-1 text-sm text-[var(--color-ink)]">{t("remotePurchaseAvailable")}</p>
               </div>
               <div>
                 <p className="text-xs font-medium uppercase tracking-wide text-[var(--color-brass)]">
-                  Language Support
+                  {t("languageSupport")}
                 </p>
-                <p className="mt-1 text-sm text-[var(--color-ink)]">English-speaking agent available</p>
+                <p className="mt-1 text-sm text-[var(--color-ink)]">{t("englishSpeakingAgentAvailable")}</p>
               </div>
               <div>
                 <p className="text-xs font-medium uppercase tracking-wide text-[var(--color-brass)]">
-                  Legal Assistance
+                  {t("legalAssistance")}
                 </p>
-                <p className="mt-1 text-sm text-[var(--color-ink)]">Available through trusted partners</p>
+                <p className="mt-1 text-sm text-[var(--color-ink)]">{t("availableTrustedPartners")}</p>
               </div>
               <div>
                 <p className="text-xs font-medium uppercase tracking-wide text-[var(--color-brass)]">
-                  Financing
+                  {t("financing")}
                 </p>
-                <p className="mt-1 text-sm text-[var(--color-ink)]">
-                  Cash purchase recommended — mortgage availability varies
-                </p>
+                <p className="mt-1 text-sm text-[var(--color-ink)]">{t("financingDetail")}</p>
               </div>
             </div>
           </div>
 
-          {/* Cost breakdown */}
           <div className="mt-8">
             <h2 className="font-display text-xl text-[var(--color-ink)]">
-              💰 Estimated Total Purchase Cost
+              {t("estimatedTotalCost")}
             </h2>
             <div className="mt-4 overflow-hidden rounded-sm border border-[var(--color-line)]">
               {[
-                ["Property Price", formatUSD(property.priceUSD)],
-                ["Estimated Closing Costs", formatRange(costs.closingCostMin, costs.closingCostMax)],
-                ["Estimated Cash Required", formatRange(costs.cashRequiredMin, costs.cashRequiredMax)],
-                ["Monthly HOA (expensas)", `${formatUSD(costs.monthlyHOA)}/mo`],
-                ["Estimated Property Taxes", `${formatUSD(costs.monthlyPropertyTax)}/mo`],
+                [t("propertyPrice"), formatUSD(property.priceUSD)],
+                [t("estimatedClosingCosts"), formatRange(costs.closingCostMin, costs.closingCostMax)],
+                [t("estimatedCashRequired"), formatRange(costs.cashRequiredMin, costs.cashRequiredMax)],
+                [t("monthlyHoa"), `${formatUSD(costs.monthlyHOA)}/mo`],
+                [t("estimatedPropertyTaxes"), `${formatUSD(costs.monthlyPropertyTax)}/mo`],
               ].map(([label, value], i) => (
                 <div
                   key={label}
@@ -104,22 +102,21 @@ export default function ForeignBuyerHub({ property }: { property: Property }) {
               ))}
             </div>
             <p className="mt-2 text-xs text-[var(--color-ink-soft)]">
-              Estimates for illustration only — actual costs vary by transaction.
+              {t("estimatesIllustrationOnly")}
             </p>
           </div>
 
-          {/* Buying process */}
           <div className="mt-8">
             <h2 className="font-display text-xl text-[var(--color-ink)]">
-              📄 Buying Process
+              {t("buyingProcess")}
             </h2>
             <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-0">
-              {BUYING_STEPS.map((step, i) => (
+              {buyingSteps.map((step, i) => (
                 <div key={step} className="flex items-center">
                   <span className="rounded-full border border-[var(--color-line)] bg-white px-3 py-1.5 text-xs font-medium text-[var(--color-ink)]">
                     {i + 1}. {step}
                   </span>
-                  {i < BUYING_STEPS.length - 1 && (
+                  {i < buyingSteps.length - 1 && (
                     <span className="mx-2 hidden text-[var(--color-brass)] sm:inline">→</span>
                   )}
                 </div>
@@ -129,68 +126,63 @@ export default function ForeignBuyerHub({ property }: { property: Property }) {
         </>
       )}
 
-      {/* Neighborhood snapshot */}
       {info && (
         <div className="mt-8">
           <h2 className="font-display text-xl text-[var(--color-ink)]">
-            📍 Neighborhood Snapshot — {property.neighborhood}
+            {t("neighborhoodSnapshot")} — {property.neighborhood}
           </h2>
           <div className="mt-4 grid grid-cols-1 gap-4 rounded-sm border border-[var(--color-line)] bg-white p-6 sm:grid-cols-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-[var(--color-ink-soft)]">Walkability</span>
+              <span className="text-[var(--color-ink-soft)]">{t("walkability")}</span>
               <StarRating value={info.walkability} />
             </div>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-[var(--color-ink-soft)]">Nightlife</span>
+              <span className="text-[var(--color-ink-soft)]">{t("nightlife")}</span>
               <StarRating value={info.nightlife} />
             </div>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-[var(--color-ink-soft)]">Families</span>
+              <span className="text-[var(--color-ink-soft)]">{t("families")}</span>
               <StarRating value={info.families} />
             </div>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-[var(--color-ink-soft)]">Parks</span>
+              <span className="text-[var(--color-ink-soft)]">{t("parks")}</span>
               <StarRating value={info.parks} />
             </div>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-[var(--color-ink-soft)]">Luxury</span>
+              <span className="text-[var(--color-ink-soft)]">{t("luxury")}</span>
               <StarRating value={info.luxury} />
             </div>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-[var(--color-ink-soft)]">Digital Nomads</span>
+              <span className="text-[var(--color-ink-soft)]">{t("digitalNomads")}</span>
               <StarRating value={info.digitalNomads} />
             </div>
 
             <div className="col-span-full mt-2 border-t border-[var(--color-line)] pt-4 text-sm">
               <p className="text-[var(--color-ink-soft)]">
-                Average Price/m²:{" "}
+                {t("avgPricePerM2")}:{" "}
                 <span className="text-[var(--color-ink)]">
                   {formatUSD(info.avgPricePerM2)}
                 </span>
               </p>
               <p className="mt-1 text-[var(--color-ink-soft)]">
-                Popular Restaurants:{" "}
+                {t("popularRestaurants")}:{" "}
                 <span className="text-[var(--color-ink)]">{info.popularRestaurants}</span>
               </p>
               <p className="mt-1 text-[var(--color-ink-soft)]">
-                Subway Access:{" "}
+                {t("subwayAccess")}:{" "}
                 <span className="text-[var(--color-ink)]">{info.subwayAccess}</span>
               </p>
             </div>
           </div>
           <p className="mt-2 text-xs text-[var(--color-ink-soft)]">
-            Illustrative estimates for prototype purposes only.
+            {t("illustrativeEstimatesOnly")}
           </p>
         </div>
       )}
 
-      {/* Consultation CTA */}
       <div className="mt-8 rounded-sm bg-[var(--color-patina)] p-6 text-center text-white">
-        <h2 className="font-display text-xl">📞 Need Help?</h2>
-        <p className="mt-2 text-sm text-white/90">
-          Book a free consultation — we&apos;ll connect you with a realtor,
-          attorney, accountant, and property manager.
-        </p>
+        <h2 className="font-display text-xl">{t("needHelp")}</h2>
+        <p className="mt-2 text-sm text-white/90">{t("bookConsultation")}</p>
         <a
           href={`https://wa.me/${property.agentWhatsapp}?text=${encodeURIComponent(
             "Hi, I would like to book a free consultation about buying property in Buenos Aires."
@@ -199,7 +191,7 @@ export default function ForeignBuyerHub({ property }: { property: Property }) {
           rel="noopener noreferrer"
           className="mt-4 inline-block rounded-sm bg-white px-6 py-3 text-sm font-medium text-[var(--color-patina)]"
         >
-          Book a Free Consultation
+          {t("bookFreeConsultation")}
         </a>
       </div>
     </div>

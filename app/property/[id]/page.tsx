@@ -14,7 +14,7 @@ import { useFavorites } from "@/hooks/useFavorites";
 export default function PropertyDetailsPage() {
   const params = useParams();
   const id = params.id as string;
-  const { formatAmount } = useAppSettings();
+  const { formatAmount, t, language } = useAppSettings();
   const { isFavorite, toggleFavorite } = useFavorites();
   const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
@@ -33,16 +33,16 @@ export default function PropertyDetailsPage() {
         <Header />
         <div className="mx-auto max-w-3xl px-6 py-20 text-center">
           <h1 className="font-display text-2xl text-[var(--color-ink)]">
-            Property not found
+            {t("propertyNotFound")}
           </h1>
           <p className="mt-2 text-[var(--color-ink-soft)]">
-            This listing may have been removed or the link is incorrect.
+            {t("listingRemovedOrIncorrect")}
           </p>
           <Link
             href="/search"
             className="mt-6 inline-block rounded-sm bg-[var(--color-ink)] px-5 py-2 text-sm font-medium text-white"
           >
-            Back to Search
+            {t("backToSearch")}
           </Link>
         </div>
         <Footer />
@@ -51,6 +51,7 @@ export default function PropertyDetailsPage() {
   }
 
   const favorited = isFavorite(property.id);
+  const displayTitle = language === "ES" ? property.titleEs : property.title;
 
   const whatsappText = "Hi, I am interested in " + property.title + " (" + property.neighborhood + "). Is it still available?";
   const whatsappMessage = encodeURIComponent(whatsappText);
@@ -73,7 +74,7 @@ export default function PropertyDetailsPage() {
           href="/search"
           className="text-sm text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]"
         >
-          Back to Search
+          {t("backToSearch")}
         </Link>
 
         <div className="mt-4 grid grid-cols-1 gap-10 lg:grid-cols-[1.4fr_1fr]">
@@ -105,7 +106,7 @@ export default function PropertyDetailsPage() {
                 <img
                   ref={checkAlreadyLoaded}
                   src={property.image}
-                  alt={property.title}
+                  alt={displayTitle}
                   onLoad={() => setLoaded(true)}
                   onError={() => setErrored(true)}
                   style={{
@@ -121,7 +122,7 @@ export default function PropertyDetailsPage() {
               )}
 
               <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-medium uppercase tracking-wide text-[var(--color-ink)]">
-                {property.operation === "buy" ? "For Sale" : "For Rent"}
+                {property.operation === "buy" ? t("forSale") : t("forRent")}
               </span>
             </div>
 
@@ -129,21 +130,21 @@ export default function PropertyDetailsPage() {
               {property.neighborhood} · {property.type}
             </p>
             <h1 className="font-display mt-1 text-3xl text-[var(--color-ink)]">
-              {property.title}
+              {displayTitle}
             </h1>
             <p className="mt-1 text-sm text-[var(--color-ink-soft)]">
               {property.address}
             </p>
 
             <div className="mt-4 flex items-center gap-6 border-y border-[var(--color-line)] py-4 text-sm text-[var(--color-ink)]">
-              <span>{property.bedrooms} bed</span>
-              <span>{property.bathrooms} bath</span>
+              <span>{property.bedrooms} {t("bed")}</span>
+              <span>{property.bathrooms} {t("bath")}</span>
               <span>{property.areaM2} m²</span>
             </div>
 
             <div className="mt-6">
               <h2 className="font-display text-lg text-[var(--color-ink)]">
-                Description
+                {t("description")}
               </h2>
               <p className="mt-2 text-sm leading-relaxed text-[var(--color-ink-soft)]">
                 {property.descriptionEn}
@@ -155,7 +156,7 @@ export default function PropertyDetailsPage() {
 
             <div className="mt-6">
               <h2 className="font-display text-lg text-[var(--color-ink)]">
-                Amenities
+                {t("amenities")}
               </h2>
               <div className="mt-2 flex flex-wrap gap-2">
                 {property.amenities.map((a) => (
@@ -178,7 +179,7 @@ export default function PropertyDetailsPage() {
 
               <div className="mt-6 border-t border-[var(--color-line)] pt-6">
                 <p className="text-xs font-medium uppercase tracking-wide text-[var(--color-brass)]">
-                  Listing Agent
+                  {t("listingAgent")}
                 </p>
                 <p className="mt-1 font-display text-lg text-[var(--color-ink)]">
                   {property.agentName}
@@ -194,7 +195,7 @@ export default function PropertyDetailsPage() {
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
                   <path d="M17.6 6.3A8.9 8.9 0 0 0 3.2 16.9L2 22l5.2-1.4A8.9 8.9 0 0 0 21 11.1a8.9 8.9 0 0 0-3.4-4.8Zm-5.6 13.6a7.4 7.4 0 0 1-3.8-1l-.3-.2-2.8.7.8-2.7-.2-.3A7.4 7.4 0 1 1 19 11.1a7.4 7.4 0 0 1-7 8.8Zm4-5.5c-.2-.1-1.3-.6-1.5-.7-.2-.1-.3-.1-.5.1-.1.2-.5.7-.6.8-.1.1-.2.1-.4 0a6 6 0 0 1-1.8-1.1 6.7 6.7 0 0 1-1.2-1.5c-.1-.2 0-.3.1-.4l.3-.4.2-.3v-.3l-.6-1.5c-.2-.4-.3-.3-.5-.3h-.4a.8.8 0 0 0-.6.3 2.5 2.5 0 0 0-.8 1.9c0 1.1.8 2.2 1 2.4.1.1 1.7 2.6 4.1 3.6.6.2 1 .4 1.4.5.6.2 1.1.1 1.5.1.5-.1 1.3-.5 1.5-1 .2-.5.2-.9.1-1l-.3-.2Z" />
                 </svg>
-                Contact via WhatsApp
+                {t("contactViaWhatsapp")}
               </a>
 
               <button
@@ -211,11 +212,11 @@ export default function PropertyDetailsPage() {
                 >
                   <path d="M12 20.5S3 14.6 3 8.9C3 5.9 5.4 3.5 8.3 3.5c1.7 0 3.2.8 4.2 2.1a5.2 5.2 0 0 1 8.5 4c0 5.7-9 11.9-9 11.9Z" />
                 </svg>
-                {favorited ? "Saved to Favorites" : "Save to Favorites"}
+                {favorited ? t("savedToFavorites") : t("saveToFavorites")}
               </button>
 
               <p className="mt-3 text-center text-xs text-[var(--color-ink-soft)]">
-                Opens a pre-filled message on WhatsApp
+                {t("opensPrefilledMessage")}
               </p>
             </div>
           </div>
@@ -226,7 +227,7 @@ export default function PropertyDetailsPage() {
         {similar.length > 0 && (
           <div className="mt-16">
             <h2 className="font-display mb-6 text-2xl text-[var(--color-ink)]">
-              Similar Properties
+              {t("similarProperties")}
             </h2>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {similar.map((p) => (
